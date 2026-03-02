@@ -1,3 +1,7 @@
+<p>
+  <img src="assets/branding/redstone-forge-logo.png">
+</p>
+
 # Minecraft Control Panel (LAN)
 
 A LAN-only control panel for managing Minecraft servers (Forge, Fabric, and Vanilla) with kid-friendly profile and world management.
