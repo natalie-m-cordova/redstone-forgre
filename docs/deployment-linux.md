@@ -1,6 +1,49 @@
 # Deployment – Linux NAS
 
-Placeholder. Will include:
+Deployment target: Linux NAS (Phase 2).
+
+---
+
+# Expected Environment
+
+- Linux distribution with systemd
+- Python 3.12
+- Temurin JDK 17
+- LAN network access
+
+---
+
+# Directory Layout (Planned)
+
+Example:
+
+/srv/minecraft/
+    controller/
+    profiles/
+    worlds/
+    backups/
+    logs/
+
+---
+
+# Systemd Integration (Planned)
+
+- Controller service
+- Minecraft server service
+- Automatic restart policies
+
+---
+
+# Migration from Windows
+
+- Move profile JSON files
+- Move world directories
+- Adjust path configuration
+- Replace Windows subprocess runner with Linux runner
+
+---
+
+# COMING SOON
 
 ## System Setup
 - Required Linux distribution

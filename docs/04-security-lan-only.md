@@ -1,28 +1,37 @@
 # Security Model (LAN Only)
 
-This document defines the security posture of the Minecraft Control Panel.
+The Minecraft Control Panel is intentionally LAN-only.
 
-It will include:
+---
 
-## Network Scope
-- LAN-only design
+# 1. Network Scope
+
 - No router port forwarding
-- Private network binding
+- No public internet exposure
+- Bound to private network interface
+- Accessible only within home network
 
-## Firewall Rules
-- Windows firewall configuration
-- Linux firewall (future)
+---
 
-## Process Isolation
-- Single server instance
-- Controlled runner execution
+# 2. Windows Phase Security
 
-## Optional Safeguards (Future)
-- UI PIN protection
-- Role-based access control
-- Log auditing
+- Windows Firewall configured for Private network only
+- No inbound public exposure
+- Minecraft server accessible only via LAN IP
 
-## Non-Goals
-- Public internet hosting
-- Cloud exposure
-- Multi-tenant security
+---
+
+# 3. Linux Phase Security
+
+- firewalld or UFW limited to LAN subnet
+- Service not bound to public interface
+
+---
+
+# 4. Non-Goals
+
+This system will NOT:
+- Be publicly hosted
+- Support cloud exposure
+- Provide public authentication mechanisms
+- Act as a multi-tenant service
