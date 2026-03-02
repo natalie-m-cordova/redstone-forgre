@@ -1,6 +1,10 @@
-# Minecraft Control Panel (LAN)
+<p align="center">
+  <img src="assets/branding/redstone-forge-logo.png" width="300" />
+</p>
 
-A LAN-only control panel for managing Minecraft servers (Forge, Fabric, and Vanilla) with kid-friendly profile and world management.
+# Redstone Forge
+
+A self-hosted Minecraft server control panel for managing worlds, mods, and server state.
 
 This system allows Minecraft servers to be started, stopped, and configured through a browser-based interface hosted on the server machine.
 
