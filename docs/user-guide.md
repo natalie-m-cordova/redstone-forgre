@@ -1,8 +1,31 @@
 # User Guide (Kids)
 
-This guide will explain how to use the Minecraft Control Panel.
+This guide explains how to use the Minecraft Control Panel.
 
-It will include:
+---
+
+# What You Can Do
+
+- Start the Minecraft server
+- Stop the Minecraft server
+- Create your own profile
+- Create your own world
+- Add mods (Forge or Fabric)
+- Use Vanilla mode
+
+---
+
+# Basic Rules
+
+- Do not mix Forge and Fabric
+- Do not change mods on an existing world unless you understand the risks
+- Always stop the server properly before leaving
+
+Detailed instructions will be added once MVP UI is implemented.
+
+---
+
+# COMING SOON
 
 ## Starting the Server
 - Selecting Forge, Fabric, or Vanilla

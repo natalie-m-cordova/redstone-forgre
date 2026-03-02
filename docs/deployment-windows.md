@@ -1,26 +1,42 @@
 # Deployment – Windows Host
 
-This document will describe how to deploy and run the system on Windows 10 Pro (TEMP PC).
+This document describes deployment on Windows 10 Pro (TEMP PC).
 
-It will include:
+---
 
-## Prerequisites
-- Python version
-- Java version (Temurin JDK 17)
-- Required ports
-- Firewall configuration
+# Prerequisites
 
-## Installation Steps
-- Clone repository
-- Create virtual environment
-- Install dependencies
-- Start FastAPI server
+- Python 3.12 (for backend)
+- Temurin JDK 17
+- Git
+- LAN network configured as Private
 
-## Runner Setup
-- Minecraft server installation
-- Forge/Fabric installation
-- Directory structure
-- Batch scripts or subprocess runner configuration
+---
+
+# High-Level Steps
+
+1. Clone repository
+2. Create virtual environment
+3. Install dependencies
+4. Start FastAPI server
+5. Install Minecraft server files
+6. Configure Forge / Fabric loaders
+7. Configure firewall rules
+
+---
+
+# Runner Design (Phase 1)
+
+- Python subprocess used to launch Minecraft server
+- PID stored for stop handling
+- Logs captured from console or latest.log
+- Automatic backup before configuration changes
+
+Detailed step-by-step instructions will be added during Phase 1.
+
+---
+
+# Coming Soon
 
 ## Log Handling
 - Location of latest.log
