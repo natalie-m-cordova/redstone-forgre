@@ -1,5 +1,5 @@
 <p align="center">
-  <img src=assets/branding/redstone-forge-logo.png" width="300" />
+  <img src="assets/branding/redstone-forge-logo.png" width="300" />
 </p>
 
 # Redstone Forge
