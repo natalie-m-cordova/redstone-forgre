@@ -38,6 +38,11 @@ Detailed step-by-step instructions will be added during Phase 1.
 
 # Coming Soon
 
+## Host Security Assumption
+- Host operating system is maintained with standard security practices.
+- Windows hosts are expected to run Windows Defender.
+- Redstone Forge does not replace host-level antivirus protections.
+
 ## Log Handling
 - Location of latest.log
 - Console capture strategy

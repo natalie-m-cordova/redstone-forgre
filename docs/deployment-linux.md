@@ -45,6 +45,12 @@ Example:
 
 # COMING SOON
 
+## Host Security Assumption
+- Host operating system is maintained with standard security practices.
+- Windows hosts are expected to run Windows Defender.
+- Linux hosts should maintain updated packages and firewall configuration.
+- Redstone Forge does not replace host-level antivirus protections.
+
 ## System Setup
 - Required Linux distribution
 - Required packages
