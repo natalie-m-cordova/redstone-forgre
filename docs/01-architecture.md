@@ -406,6 +406,19 @@ To preserve portability:
 
 Structure may evolve but boundaries should remain.
 
+## 13.1 MVP Runtime Storage (Stage 0–1)
+
+Runtime metadata is stored under:
+
+data/
+  profiles/
+  worlds/
+  index/
+
+These files are JSON-based and ignored by version control.
+
+World paths are stored as relative paths and resolved against a configured root.
+
 ---
 
 # 14. Future Architecture Expansion
