@@ -1,0 +1,14 @@
+{
+  "id": "kids-forge-1201",
+  "name": "Kids Forge 1.20.1",
+  "mode": "simple",
+  "loader": "forge",
+  "minecraft": { "version": "1.20.1" },
+  "loaderVersion": "47.2.0",
+  "worldId": "survival-world-1",
+  "mods": [
+    { "id": "jei", "filename": "jei-1.20.1.jar" }
+  ],
+  "memory": { "minMb": 2048, "maxMb": 4096 },
+  "createdAt": "2026-03-03T12:05:00Z"
+}

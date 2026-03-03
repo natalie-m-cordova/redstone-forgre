@@ -81,3 +81,21 @@ Each entry includes:
 **Decision:** Use Stage-based roadmap model (Stage 0–3+) instead of mixed Phase/vX naming.  
 **Scope:** Project Management  
 **Reason:** Maintain chronological clarity across development, migration, and enhancement tracks
+
+## 2026-03-03 – MVP Storage Layout
+**Decision:**  
+Use `data/` as the runtime storage root with structured subdirectories:
+- `data/profiles/`
+- `data/worlds/`
+- `data/index/`
+
+**Scope:** Stage 0 / Stage 1
+
+**Reason:** Maintain simple JSON-on-disk persistence while preserving clean separation between source code and runtime state.
+
+**Constraints:**
+- `data/` is ignored by git.
+- All world paths must be stored as relative paths.
+- No hardcoded absolute filesystem paths in code.
+
+**Future Direction:**  May migrate metadata to SQLite in Stage 3+, but filesystem boundaries remain.

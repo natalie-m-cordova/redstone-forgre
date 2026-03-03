@@ -205,3 +205,19 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# ============================================
+# Redstone Forge – Runtime Data (MVP)
+# ============================================
+
+# Runtime server data (profiles, worlds, state)
+# These are environment-specific and must never be committed.
+# JSON storage is MVP decision (see decision-log.md).
+# Will migrate to DB in future phase.
+data/*
+
+# Keep folder structure in repo
+!data/.gitkeep
+!data/profiles/.gitkeep
+!data/worlds/.gitkeep
+!data/index/.gitkeep
