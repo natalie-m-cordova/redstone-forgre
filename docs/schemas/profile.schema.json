@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://redstone-forge.local/schemas/profile.schema.json",
+  "title": "Profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "loader",
+    "minecraft",
+    "worldId",
+    "memory",
+    "createdAt"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]{3,64}$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["simple", "advanced"],
+      "default": "simple"
+    },
+    "loader": {
+      "type": "string",
+      "enum": ["vanilla", "forge", "fabric"]
+    },
+    "minecraft": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32
+        }
+      }
+    },
+    "loaderVersion": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "worldId": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]{3,64}$"
+    },
+    "mods": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "filename"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9-._]{3,128}$"
+          },
+          "filename": {
+            "type": "string",
+            "pattern": "^[^/\\\\]{1,200}$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{64}$"
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      }
+    },
+    "memory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minMb", "maxMb"],
+      "properties": {
+        "minMb": {
+          "type": "integer",
+          "minimum": 512,
+          "maximum": 65536
+        },
+        "maxMb": {
+          "type": "integer",
+          "minimum": 512,
+          "maximum": 65536
+        }
+      }
+    },
+    "jvm": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "args": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "default": []
+        }
+      }
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "loader": { "const": "vanilla" } }
+      },
+      "then": {
+        "not": { "required": ["loaderVersion"] }
+      }
+    },
+    {
+      "if": {
+        "properties": { "loader": { "enum": ["forge", "fabric"] } }
+      },
+      "then": {
+        "required": ["loaderVersion"]
+      }
+    }
+  ]
+}
