@@ -1,17 +1,83 @@
-# Decisions Log
 
-## Backend Framework
-Decision: Use Python + FastAPI
-Reason: Cross-platform, simple deployment, easy subprocess control.
+# Decision Log
 
-## Storage Model
-Decision: JSON files on disk (no database for MVP).
-Reason: Simplicity and portability to Linux.
+This document records architectural and product decisions for Redstone Forge.
 
-## Security Model
-Decision: LAN-only, no public exposure.
-Reason: Home infrastructure use case.
+Each entry includes:
+- Date
+- Decision
+- Scope
+- Reason
+- Rejected Alternatives (when applicable)
+- Supersedes (when applicable)
+- impact (when applicable)
+- Status
 
-## Runner Strategy
-Decision: Abstract runner layer so Windows and Linux implementations differ but API stays consistent.
-Reason: Enables Phase 2 migration cleanly.
+---
+
+## 2026-03-02 – Backend Framework
+**Decision:** Use Python + FastAPI  
+**Scope:** MVP → All Stages  
+**Reason:** Cross-platform, simple deployment, easy subprocess control, strong ecosystem.  
+**Rejected Alternatives:** Node.js/Express, Flask, full Django stack.
+
+## 2026-03-02 – Storage Model (MVP)
+**Decision:** Use JSON files on disk (no database for MVP).  
+**Scope:** Stage 0 / Stage 1  
+**Reason:** Simplicity and portability to Linux.  
+**Future Direction:** SQLite introduced when metadata complexity increases.
+
+## 2026-03-02 – Security Model
+**Decision:** LAN-only for inbound access (no public exposure); outbound internet allowed for mod acquisition.  
+**Scope:** MVP → v2+  
+**Reason:** Home infrastructure use case, security-first posture.  
+**Rejected Alternatives:** Reverse proxy + WAN exposure.
+
+## 2026-03-02 – Runner Strategy
+**Decision:** Abstract runner layer so Windows and Linux implementations differ but API stays consistent.  
+**Scope:** MVP → Stage 2 Migration  
+**Reason:** Enables Linux migration without architectural rewrite.
+
+## 2026-03-02 – MVP Single Instance
+**Decision:** Only one Minecraft server instance supported in MVP.  
+**Scope:** Stage 0 / Stage 1  
+**Reason:** Reduce orchestration complexity and stabilize core system first.  
+**Deferred:** Multi-instance support (Stage 3+).
+
+## 2026-03-02 – Mod Ingestion Model (MVP)
+**Decision:** Web UI upload → quarantine → validation → library → profile.  
+**Scope:** MVP  
+**Reason:** Centralized validation, no SMB permissions required.  
+**Rejected Alternatives:** Direct SMB drop folder ingestion.
+
+## 2026-03-03 – Stage 2 Migration Strategy
+**Decision:** Linux migration will be bare metal (no Docker during migration).  
+**Scope:** Stage 2  
+**Reason:** Reduce migration risk and isolate infrastructure change from deployment model experimentation.  
+**Deferred:** Docker experimentation to Stage 3.
+
+## 2026-03-03 – Docker Positioning
+**Decision:** Docker is optional and must not replace bare metal as primary supported deployment.  
+**Scope:** Stage 3+  
+**Reason:** Maintain simplicity; avoid container dependency lock-in.
+
+## 2026-03-03 – Desktop Client Positioning
+**Decision:** Desktop client is optional and must remain a thin API-based client.  
+**Scope:** Stage 3+  
+**Reason:** Prevent duplication of backend logic and filesystem coupling.  
+**Constraint:** Web UI remains authoritative.
+
+## 2026-03-03 – Profile Version Locking
+**Decision:** Profiles are version-locked to specific Minecraft + loader versions.  
+**Scope:** MVP → v2+  
+**Reason:** Prevent invalid launch states and compatibility ambiguity.
+
+## 2026-03-03 – Backup Policy Requirement
+**Decision:** Backup required before mod or world changes; retention must prevent unbounded disk growth.  
+**Scope:** MVP → v2+  
+**Reason:** Protect against data loss and disk exhaustion.
+
+## 2026-03-03 – Stage Structure
+**Decision:** Use Stage-based roadmap model (Stage 0–3+) instead of mixed Phase/vX naming.  
+**Scope:** Project Management  
+**Reason:** Maintain chronological clarity across development, migration, and enhancement tracks
