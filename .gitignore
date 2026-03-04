@@ -214,9 +214,11 @@ __marimo__/
 # These are environment-specific and must never be committed.
 # JSON storage is MVP decision (see decision-log.md).
 # Will migrate to DB in future phase.
-data/*
+data/**
 
-# Keep folder structure in repo
+# Keep scaffold folders + keepfiles tracked
+!data/
+!data/**/
 !data/.gitkeep
 !data/profiles/.gitkeep
 !data/worlds/.gitkeep
