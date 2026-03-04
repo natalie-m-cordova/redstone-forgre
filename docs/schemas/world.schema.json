@@ -20,6 +20,7 @@
       "type": "string",
       "description": "Path relative to WORLDS_ROOT. Never absolute.",
       "pattern": "^(?!\\.?$)(?!\\./)(?!/)(?!.*\\.\\.)(?!.*:)[a-zA-Z0-9._/-]+$"
+
     },
     "createdAt": {
       "type": "string",
