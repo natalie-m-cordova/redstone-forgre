@@ -218,8 +218,7 @@ data/**
 
 # Keep scaffold folders + keepfiles tracked
 !data/
-!data/**/
-!data/.gitkeep
-!data/profiles/.gitkeep
-!data/worlds/.gitkeep
-!data/index/.gitkeep
+!data/profiles/
+!data/worlds/
+!data/index/
+!data/**/.gitkeep
