@@ -89,13 +89,54 @@ Use `data/` as the runtime storage root with structured subdirectories:
 - `data/worlds/`
 - `data/index/`
 
-**Scope:** Stage 0 / Stage 1
-
-**Reason:** Maintain simple JSON-on-disk persistence while preserving clean separation between source code and runtime state.
-
+**Scope:** Stage 0 / Stage 1  
+**Reason:** Maintain simple JSON-on-disk persistence while preserving clean separation between source code and runtime state.  
 **Constraints:**
 - `data/` is ignored by git.
 - All world paths must be stored as relative paths.
-- No hardcoded absolute filesystem paths in code.
+- No hardcoded absolute filesystem paths in code.  
 
 **Future Direction:**  May migrate metadata to SQLite in Stage 3+, but filesystem boundaries remain.
+
+## 2026-03-04 – Python Command Standardization
+**Decision:** Use `python` command instead of `py`.  
+**Scope:** Development + Deployment (Windows / Linux)  
+**Reason:**  `python` works consistently across Windows and Linux environments, while `py` is Windows-specific.  Standardizing on `python` ensures cross-platform compatibility and avoids environment ambiguity.  
+**Rejected Alternatives:**  - Using `py` launcher on Windows.  
+**Impact:**  All documentation and commands will reference `python`.  Install instructions require Python to be available on PATH.  
+**Status:** Active  
+
+## 2026-03-04 – Swagger Favicon Customization
+**Decision:** Swagger UI favicon customization deferred.  
+**Scope:** MVP  
+**Reason:**  The default Swagger favicon does not impact system functionality.  Customizing the Swagger UI HTML introduced unnecessary complexity during early development.  
+**Rejected Alternatives:**  
+- Overriding the Swagger UI HTML.
+- Custom Swagger template injection.
+
+**Impact:**  Swagger UI will use the default favicon during MVP development.  
+**Status:** Deferred
+
+## 2026-03-04 – Deployment Documentation Structure
+**Decision:** Split deployment documentation by machine role and operating system.  
+**Scope:** Documentation  
+**Reason:** Redstone Forge supports multiple machine roles:
+- Backend server host
+- Optional controller client  
+
+Separating deployment documentation prevents mixing instructions for different operating systems and roles.  
+**Impact:**  Deployment documentation is organized as:
+- `deployment.md` (entry point)
+- `deployment-linux-server.md`
+- `deployment-windows-server.md`
+- `deployment-windows-controller.md`
+
+**Status:** Active
+
+## 2026-03-04 – Manual Server Startup (Development)
+**Decision:** FastAPI server is started manually during Stage 0 development.  
+**Scope:** Stage 0 – Development MVP  
+**Reason:**  Manual startup simplifies development and avoids premature process management complexity.  
+Automated service management will be introduced when real Minecraft subprocess execution is implemented.  
+**Impact:**  Developers start the server manually using:  `python -m uvicorn backend.main:app`  
+**Status:** Active
