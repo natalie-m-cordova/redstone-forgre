@@ -145,7 +145,7 @@ All expansion must preserve architectural invariants.
 
 See:
 
-➡️ [Roadmap](#core-documents)
+➡️ [Roadmap](#core-documents)  
 ➡️ [Decision Log](#core-documents)
 
 ---
