@@ -6,6 +6,7 @@ from fastapi.staticfiles import StaticFiles
 
 from backend.api.routers import system, servers, worlds
 from backend.ui.router import router as ui_router
+from backend.api.routers import ui_data
 
 # backend/main.py -> backend/ -> repo root
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -32,3 +33,4 @@ app.include_router(ui_router)
 app.include_router(system.router)
 app.include_router(servers.router, prefix="/servers", tags=["servers"])
 app.include_router(worlds.router, prefix="/worlds", tags=["worlds"])
+app.include_router(ui_data.router, prefix="/api", tags=["ui"])

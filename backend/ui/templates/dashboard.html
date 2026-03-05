@@ -15,109 +15,17 @@
       <button class="carousel-btn" type="button" id="carPrev">◀</button>
 
       <div class="carousel-track" id="carTrack">
-        <!-- placeholder cards; later replace with real last-played -->
-        <div class="mini-card" data-world="FoDWorld">
-          <div class="mini-title">Forge Survival</div>
-          <div class="mini-sub">World: <span class="hoverable worldName">FoDWorld</span></div>
-          <div class="mini-actions">
-            <button class="btn small" data-action="start">Start</button>
-            <button class="btn small secondary" data-action="stop">Stop</button>
-          </div>
-        </div>
-
-        <div class="mini-card" data-world="FaDWorld">
-          <div class="mini-title">Fabric Survival</div>
-          <div class="mini-sub">World: <span class="hoverable worldName">FaDWorld</span></div>
-          <div class="mini-actions">
-            <button class="btn small" data-action="start">Start</button>
-            <button class="btn small secondary" data-action="stop">Stop</button>
-          </div>
-        </div>
-
-        <div class="mini-card" data-world="VaDWorld">
-          <div class="mini-title">Vanilla Survival</div>
-          <div class="mini-sub">World: <span class="hoverable worldName">VaDWorld</span></div>
-          <div class="mini-actions">
-            <button class="btn small" data-action="start">Start</button>
-            <button class="btn small secondary" data-action="stop">Stop</button>
-          </div>
-        </div>
+        <div class="muted">Loading…</div>
       </div>
 
       <button class="carousel-btn" type="button" id="carNext">▶</button>
     </div>
   </section>
-
   <section class="card">
     <div class="card-title">Quick Start Grid</div>
-
-    <div class="grid">
-      <!-- Forge row -->
-      <div class="row-label">Forge</div>
-      <div class="server-tile" data-server="Forge Survival" data-world="FoDWorld">
-        <div class="tile-title">Forge Survival</div>
-        <div class="tile-world">World: <span class="hoverable worldName">FoDWorld</span></div>
-        <img class="tile-thumb" src="/assets/mock-worlds/survival_world.png" alt="World thumbnail" />
-        <div class="tile-actions">
-          <button class="btn" data-action="start">Start</button>
-          <button class="btn secondary" data-action="stop">Stop</button>
-        </div>
-      </div>
-      <div class="server-tile" data-server="Forge Creative" data-world="FoDWorld">
-        <div class="tile-title">Forge Creative</div>
-        <div class="tile-world">World: <span class="hoverable worldName">FoDWorld</span></div>
-        <img class="tile-thumb" src="/assets/mock-worlds/survival_world.png" alt="World thumbnail" />
-        <div class="tile-actions">
-          <button class="btn" data-action="start">Start</button>
-          <button class="btn secondary" data-action="stop">Stop</button>
-        </div>
-      </div>
-
-      <!-- Fabric row -->
-      <div class="row-label">Fabric</div>
-      <div class="server-tile" data-server="Fabric Survival" data-world="FaDWorld">
-        <div class="tile-title">Fabric Survival</div>
-        <div class="tile-world">World: <span class="hoverable worldName">FaDWorld</span></div>
-        <img class="tile-thumb" src="/assets/mock-worlds/survival_world.png" alt="World thumbnail" />
-        <div class="tile-actions">
-          <button class="btn" data-action="start">Start</button>
-          <button class="btn secondary" data-action="stop">Stop</button>
-        </div>
-      </div>
-      <div class="server-tile" data-server="Fabric Creative" data-world="FaDWorld">
-        <div class="tile-title">Fabric Creative</div>
-        <div class="tile-world">World: <span class="hoverable worldName">FaDWorld</span></div>
-        <img class="tile-thumb" src="/assets/mock-worlds/survival_world.png" alt="World thumbnail" />
-        <div class="tile-actions">
-          <button class="btn" data-action="start">Start</button>
-          <button class="btn secondary" data-action="stop">Stop</button>
-        </div>
-      </div>
-
-      <!-- Vanilla row -->
-      <div class="row-label">Vanilla</div>
-      <div class="server-tile" data-server="Vanilla Survival" data-world="VaDWorld">
-        <div class="tile-title">Vanilla Survival</div>
-        <div class="tile-world">World: <span class="hoverable worldName">VaDWorld</span></div>
-        <img class="tile-thumb" src="/assets/mock-worlds/survival_world.png" alt="World thumbnail" />
-        <div class="tile-actions">
-          <button class="btn" data-action="start">Start</button>
-          <button class="btn secondary" data-action="stop">Stop</button>
-        </div>
-      </div>
-      <div class="server-tile" data-server="Vanilla Creative" data-world="VaDWorld">
-        <div class="tile-title">Vanilla Creative</div>
-        <div class="tile-world">World: <span class="hoverable worldName">VaDWorld</span></div>
-        <img class="tile-thumb" src="/assets/mock-worlds/survival_world.png" alt="World thumbnail" />
-        <div class="tile-actions">
-          <button class="btn" data-action="start">Start</button>
-          <button class="btn secondary" data-action="stop">Stop</button>
-        </div>
-      </div>
-    </div>
-
+    <div id="gridMount" class="grid"></div>
     <div class="muted note">
-      Buttons call mock endpoints (<code>/start</code>, <code>/stop</code>) and update status without page refresh.
+      Grid is generated from <code>/api/servers</code>.
     </div>
   </section>
 

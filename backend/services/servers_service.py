@@ -18,8 +18,18 @@ def _server_path(server_id: str) -> Path:
     return SERVERS_DIR / f"{server_id}.json"
 
 def list_servers() -> List[Dict]:
+    # Return full server objects (MVP scale: small list)
     index = read_json(INDEX_PATH, default={"items": []})
-    return index.get("items", [])
+    items = index.get("items", [])
+    results: List[Dict] = []
+    for item in items:
+        sid = item.get("id")
+        if not sid:
+            continue
+        path = _server_path(sid)
+        if path.exists():
+            results.append(read_json(path, default={}))
+    return results
 
 def get_server(server_id: str) -> Optional[Dict]:
     path = _server_path(server_id)
@@ -36,13 +46,15 @@ def create_server(payload: ServerCreate) -> Dict:
         updatedAt=now,
         **payload.model_dump()
     )
+
     write_json(_server_path(server_id), server.model_dump())
 
     index = read_json(INDEX_PATH, default={"items": []})
     items = index.get("items", [])
-    items.append({"id": server_id, "name": server.name, "loader": server.loader})
+    items.append({"id": server_id})
     index["items"] = items
     write_json(INDEX_PATH, index)
+
     return server.model_dump()
 
 def update_server(server_id: str, payload: ServerCreate) -> Optional[Dict]:
@@ -57,14 +69,6 @@ def update_server(server_id: str, payload: ServerCreate) -> Optional[Dict]:
         "updatedAt": now.isoformat()
     }
     write_json(_server_path(server_id), updated)
-
-    index = read_json(INDEX_PATH, default={"items": []})
-    for item in index.get("items", []):
-        if item.get("id") == server_id:
-            item["name"] = updated.get("name")
-            item["loader"] = updated.get("loader")
-    write_json(INDEX_PATH, index)
-
     return updated
 
 def delete_server(server_id: str) -> bool:
@@ -75,5 +79,4 @@ def delete_server(server_id: str) -> bool:
     index = read_json(INDEX_PATH, default={"items": []})
     index["items"] = [i for i in index.get("items", []) if i.get("id") != server_id]
     write_json(INDEX_PATH, index)
-
     return True

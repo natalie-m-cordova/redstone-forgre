@@ -222,3 +222,5 @@ data/**
 !data/worlds/
 !data/index/
 !data/**/.gitkeep
+
+.zip
