@@ -35,7 +35,7 @@ Expected response:
 {
   "ok": true,
   "state": "STOPPED",
-  "activeProfileId": null,
+  "activeServerId": null,
   "activeWorldId": null
 }
 ```

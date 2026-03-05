@@ -16,7 +16,7 @@ Runs:
 
 - Redstone Forge API
 - Minecraft Server
-- Profiles and Worlds storage
+- Servers and Worlds storage
 - Automated backups
 
 See:
@@ -33,7 +33,7 @@ Runs:
 
 - Redstone Forge API
 - Minecraft Server
-- Profiles and Worlds storage
+- Servers and Worlds storage
 
 See:
 
@@ -49,7 +49,7 @@ Runs:
 
 - Redstone Forge UI / Controller
 - API client tools
-- Profile management
+- Server management
 
 Does NOT host Minecraft itself.
 
@@ -72,7 +72,7 @@ Linux Server
 │
 ├─ Redstone Forge API
 ├─ Minecraft Server
-├─ Profiles
+├─ Servers
 ├─ Worlds
 └─ Backups
 ```

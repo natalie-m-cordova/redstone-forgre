@@ -21,7 +21,7 @@ Redstone Forge is a **LAN-first, self-hosted Minecraft server control panel** de
 It provides a browser-based interface for managing:
 
 - Minecraft server lifecycle
-- Profiles (Forge, Fabric, Vanilla)
+- Servers (Forge, Fabric, Vanilla)
 - Worlds
 - Mod ingestion and validation
 - Backups and guardrails

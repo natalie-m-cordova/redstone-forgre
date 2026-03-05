@@ -140,3 +140,29 @@ Separating deployment documentation prevents mixing instructions for different o
 Automated service management will be introduced when real Minecraft subprocess execution is implemented.  
 **Impact:**  Developers start the server manually using:  `python -m uvicorn backend.main:app`  
 **Status:** Active
+
+## 2026-03-04 – Event-driven UI Updates
+**Decision:** Use an event-driven update model (SSE initially; WebSocket optional later) so the UI can update without full-page refresh.  
+**Scope:** Stage 0+ UI interactions; Stage 1 console + progress; Stage 3 telemetry  
+**Reason:** Supports Crafty-like UX: live console output, progress bars, and “thinking” popups during long operations.  
+**Rejected Alternatives:** Full refresh on actions; polling-only UI (except lightweight metrics polling).  
+**Impact:** Backend will expose a streaming endpoint for operation and status events. UI will subscribe and update in place.
+
+## 2026-03-04 - UI Terms: Servers vs Profiles
+**Decision:** UI will use the term **Servers** instead of **Profiles**.  
+**Scope:** Stage0+  
+**Reason:** “Profiles” is ambiguous for non-technical users.  “Servers” matches what the kids think they are controlling.  The product goal is “Start/Stop Minecraft server remotely” and the UI is a control panel, so “Servers” is the natural label.
+**Impact:** 
+- Navigation label: **Servers**
+- Page title: **Servers**
+- Dashboard copy: “Server” terminology
+
+Internally (data model), we may still use:
+- `Profile` (existing architecture terminology), or
+- rename to `ServerProfile` in code later
+
+This is a UX decision for clarity (kid-friendly) and does not change architectural invariants.
+Architecture documents may continue to use “Profiles” as the canonical model term to avoid churn, but the UI should consistently present “Servers”.
+
+Future cleanup step:
+- Add a short mapping note in `docs/03-profiles-worlds.md` (Servers UI == Profiles model).

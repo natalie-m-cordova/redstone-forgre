@@ -17,7 +17,7 @@ server execution.
 
 -   FastAPI backend skeleton
 -   Web UI (Simple + Advanced toggle)
--   Profile CRUD
+-   Server CRUD
     -   Forge / Fabric / Vanilla selection
 -   World CRUD
 -   Mock start/stop endpoints
@@ -26,13 +26,19 @@ server execution.
 -   Status display
 -   Logging simulation
 -   Clean project structure
+-   **App-like UI interactions (no refresh)**
+    -   Dashboard controls update status in-place
+    -   Mock progress events for start/stop/upload to validate UX flow
+-   **Progress + “server thinking” UI**
+    -   Popups/spinners for long operations (simulated)
 
 ## Exit Criteria
 
 -   UI functions end-to-end
--   Profile and world configuration stored properly
+-   Server and world configuration stored properly
 -   No real subprocess execution yet
 -   Ready for Windows host integration
+-   SPA-like *feel* (no refresh) with mock state transitions
 
 ## Explicitly Excluded
 
@@ -62,6 +68,16 @@ server execution.
 -   Stable local deployment
 -   Clean installation process documentation
 -   Static IP assignment or DHCP reservation
+-   **Live console streaming (stdout)**
+    -   Real-time server output to UI
+-   **Advanced console input (stdin)**
+    -   Send commands to server console (Advanced Mode)
+-   **Progress events for real operations**
+    -   start/stop lifecycle
+    -   mod upload + validation stages
+    -   backup creation and restore
+-   **Basic telemetry**
+    -   CPU/RAM utilization from the server process
 
 ## Exit Criteria
 
@@ -69,6 +85,7 @@ server execution.
 -   Logs stream reliably
 -   Backups trigger correctly
 -   System stable for daily use
+-   real streaming console + progress events
 
 ## Explicitly Excluded
 
@@ -93,7 +110,7 @@ This stage coincides with the purchase of the new desktop for the kids, eliminat
 -   Linux installation and base configuration
 -   Backend deployment on Linux (bare metal)
 -   systemd service integration
--   Data migration (profiles, worlds, mod library, backups, logs, database)
+-   Data migration (servers, worlds, mod library, backups, logs, database)
 -   Validated restore procedure on Linux
 -   Static IP assignment or DHCP reservation
 -   LAN firewall configuration
@@ -105,7 +122,7 @@ This stage coincides with the purchase of the new desktop for the kids, eliminat
 -   Minecraft server launches and stops successfully
 -   Log streaming functional
 -   Backup and restore validated on Linux
--   All profiles and worlds migrated successfully
+-   All servers and worlds migrated successfully
 -   System stable for daily use
 
 ## Explicitly Excluded
@@ -131,6 +148,10 @@ This stage begins only after Stage 2 exit criteria are met (Linux deployment sta
 -   Improved observability:
     -   clearer status states (STOPPED/STARTING/RUNNING/STOPPING/ERROR)
     -   actionable error messages in UI
+-   **Dashboard Rich Telemetry + UX polish**
+    -   graphs/status bars for CPU/RAM/disk
+    -   operation progress bars (uploads, backups, start)
+    -   “what is happening now” activity feed
 -   Backup retention policy implementation (rotation/limits) consistent with architecture invariants
 -   Restore workflow (documented + tested)
 
@@ -147,7 +168,7 @@ This stage begins only after Stage 2 exit criteria are met (Linux deployment sta
    -   CurseForge import (optional):
        -   Detect installed CurseForge modpacks
        -   Parse manifest
-       -   Generate server profile from modpack
+       -   Generate server server from modpack
        -   Validate loader and Minecraft version compatibility
 
 3) **Desktop Client (Optional)**
@@ -165,6 +186,7 @@ This stage begins only after Stage 2 exit criteria are met (Linux deployment sta
 -   Clear install path(s) exist and are documented (bare metal + optional Docker)
 -   Mod ingestion and validation remain safe and auditable
 -   Desktop client (if implemented) does not duplicate backend logic
+-   dashboards/graphs, backup UX, richer advanced mode
 
 ## Explicitly Excluded (until explicitly promoted)
 -   Kubernetes / k3s deployment as a primary install method

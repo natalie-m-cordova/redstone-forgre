@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://redstone-forge.local/schemas/profile.schema.json",
-  "title": "Profile",
+  "$id": "https://redstone-forge.local/schemas/server.schema.json",
+  "title": "Server",
   "type": "object",
   "additionalProperties": false,
   "required": [

@@ -1,8 +1,8 @@
-# Profiles and Worlds Design
+# Servers and Worlds Design
 
- Profiles and Worlds Design
+ Servers and Worlds Design
 
-This document defines how profiles and worlds are structured and managed.
+This document defines how servers and worlds are structured and managed.
 
 ---
 
@@ -18,9 +18,9 @@ Forge and Fabric cannot mix.
 
 ---
 
-## Profile
+## Server
 
-A profile defines:
+A server defines:
 
 - Name
 - Loader type
@@ -30,9 +30,9 @@ A profile defines:
 - Assigned world
 - Memory allocation
 
-Profiles are configuration containers.
+Servers are configuration containers.
 
-Each profile may have:
+Each server may have:
 - Its own dedicated world
 - Or an assigned shared world (advanced usage)
 
@@ -42,7 +42,7 @@ Each profile may have:
 
 A world:
 - Is stored in its own folder
-- Can be assigned to a profile
+- Can be assigned to a server
 - Can be created, cloned, or archived (future)
 - Is backed up automatically when mod configuration changes
 
@@ -54,16 +54,16 @@ Backups are mandatory before launch if configuration changes.
 # 2. Guardrails
 
 - Forge and Fabric separation enforced
-- Profiles pinned to Minecraft version
-- Mod selection stored in profile configuration
+- Servers pinned to Minecraft version
+- Mod selection stored in server configuration
 - Configuration change triggers backup
-- Default: profile uses its own world
+- Default: server uses its own world
 
 ---
 
 # 3. Storage (MVP)
 
-Profiles and worlds will initially be stored as JSON files on disk.
+Servers and worlds will initially be stored as JSON files on disk.
 
 No database will be used in MVP.
 
@@ -71,7 +71,7 @@ No database will be used in MVP.
 
 # COMING SOON
 
-## Profile Structure
+## Server Structure
 - JSON schema definition
 - Loader configuration
 - Mod selection storage
@@ -90,6 +90,6 @@ No database will be used in MVP.
 - Backup triggers when configuration changes
 
 ## Future Enhancements
-- Profile export/import
+- Server export/import
 - World cloning
 - Mod dependency validation

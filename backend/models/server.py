@@ -4,13 +4,13 @@ from datetime import datetime
 
 LoaderType = Literal["vanilla", "forge", "fabric"]
 
-class ProfileCreate(BaseModel):
+class ServerCreate(BaseModel):
     name: str = Field(min_length=1, max_length=64)
     loader: LoaderType
     minecraftVersion: str = Field(min_length=1, max_length=32)
     loaderVersion: Optional[str] = Field(default=None, max_length=32)
 
-class Profile(ProfileCreate):
+class Server(ServerCreate):
     id: str
     createdAt: datetime
     updatedAt: datetime

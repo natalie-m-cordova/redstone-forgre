@@ -41,7 +41,7 @@ MVP defines what is temporarily limited.
 ## 1.1 In Scope (MVP)
 
 - Single Minecraft server instance
-- Profile-based mod configuration
+- Server-based mod configuration
 - World selection and management
 - Web-based UI (LAN only)
 - Mod ingestion via Web UI upload
@@ -110,7 +110,7 @@ It does not access the filesystem directly.
 [Minecraft Server Process]
         |
         v
-[Profiles | Worlds | Mods | Backups | Logs | Database]
+[Servers | Worlds | Mods | Backups | Logs | Database]
 ```
 
 ---
@@ -144,7 +144,7 @@ Technology:
 - FastAPI
 
 Responsibilities:
-- Manage Profiles
+- Manage Servers
 - Manage Worlds
 - Ingest mod files
 - Validate mod files
@@ -170,11 +170,77 @@ The backend is the single source of operational truth.
 Responsibilities:
 - Display status
 - Upload mods (MVP)
-- Select profiles and worlds
+- Select servers and worlds
 - Display logs
 - Initiate server start/stop
 
 No client-side filesystem access.
+
+### 3.2.1 Simple Mode (Kid-Friendly Interface)
+
+Simple Mode is designed for non-technical users and provides safe, minimal controls.
+
+Capabilities:
+- Start/Stop server
+- Status indicator showing server state and activity
+- Select a world and apply it safely
+- Select mods from curated or pre-downloaded library
+- View minimal recent activity information (read-only)
+
+Guardrails:
+- No destructive actions without confirmation
+- No direct file manipulation
+- No console command access
+
+### 3.2.2 Advanced Mode
+
+Advanced Mode exposes operational surfaces for experienced users.
+
+Capabilities:
+
+- Live console access (stdin/stdout)
+- Backup creation and restore operations
+- Upload worlds and mods
+- Progress bars for uploads and server startup
+- CPU and memory telemetry
+- Detailed status and error information
+
+### 3.2.3 UI Interaction Model
+- **Default behavior:** App-like UI with **no full page refresh** for control actions.
+- UI actions trigger backend operations and receive:
+  - immediate acknowledgement (e.g., “Starting…”)
+  - progress updates (percent / stages)
+  - completion/failure events with actionable errors
+- **Simple Mode:** Minimal controls + guardrails + “safe defaults”.
+- **Advanced Mode:** Full operational surfaces (console, backups, uploads, telemetry).
+
+### 3.2.4 Streaming Surfaces (Console, Events, Telemetry)
+The UI must support **live streaming** surfaces, not “static logs only”:
+- **Live Console (stdin/stdout)**
+  - Stream server stdout to UI in near-real time
+  - Allow sending commands (stdin) from Advanced Mode
+  - Simple Mode may show read-only “status + recent activity” only
+- **Event Stream (UI Progress + Status)**
+  - Start/Stop/Backup/Restore/Upload operations emit progress events
+  - UI displays “thinking” popups / spinners / progress bars
+- **Telemetry (CPU/RAM)**
+  - UI can show lightweight runtime metrics (CPU%, RAM, uptime)
+  - Metrics are informational; backend remains authoritative on safety limits
+
+Implementation note (non-binding):
+- Consider Server-Sent Events (SSE) for MVP streaming (simple, HTTP-friendly),
+  and WebSockets later if bidirectional console requires it.
+
+### 3.2.5 World + Mod Library UX Invariants
+- Worlds and mods must be managed through a **single library location** owned by the backend.
+- UI supports:
+  - selecting an already-downloaded **world** to apply
+  - selecting already-downloaded **mods** to apply
+  - uploading worlds/mods into their respective libraries (Advanced Mode first)
+- Applying worlds/mods must trigger:
+  - validation checks
+  - automatic backup before change
+  - clear confirmation prompts for destructive operations
 
 ## 3.3 Desktop Client (v2+ Optional)
 
@@ -214,15 +280,15 @@ These rules must remain true across versions:
 
 - Single server instance in MVP; architecture must not prevent future multi-instance support
 - Forge and Fabric are completely isolated
-- Profiles are version-locked to a specific Minecraft version and loader version (Forge/Fabric)
-- Profile validation blocks launch if Minecraft/loader version mismatches are detected
-- Profiles define mod configurations
-- Worlds are independent but attachable to profiles
+- Servers are version-locked to a specific Minecraft version and loader version (Forge/Fabric)
+- Server validation blocks launch if Minecraft/loader version mismatches are detected
+- Servers define mod configurations
+- Worlds are independent but attachable to servers
 - Backup required before mod or world changes
 - Backup retention strategy must prevent unbounded disk growth
 - LAN-only exposure unless explicitly redesigned
 - Uploaded/downloaded files treated as untrusted input
-- Profile changes blocked while server is running
+- Server changes blocked while server is running
 - Backend owns process lifecycle
 - No hardcoded environment values in code (IPs, hostnames, ports, file paths). All environment-specific values must be configured via config files and/or environment variables with safe defaults.
 
@@ -236,7 +302,7 @@ Flow:
 
 
 ``` 
-Client Download → Web Upload → Quarantine → Validate → Library → Profile → Backup → Launch 
+Client Download → Web Upload → Quarantine → Validate → Library → Server → Backup → Launch 
 ```
 
 Rules:
@@ -253,7 +319,7 @@ Storage zones:
 ```
 /uploads/quarantine/
 /mods/library/
-/profiles/<profile>/mods/
+/server/<server>/mods/
 /worlds/
 /backups/
 /logs/
@@ -267,7 +333,7 @@ Storage zones:
 Flow:
 
 ```
-UI Selection → Backend Download → Quarantine → Validate → Library → Profile
+UI Selection → Backend Download → Quarantine → Validate → Library → Server
 ```
 
 Additional Requirements:
@@ -284,10 +350,10 @@ Additional Requirements:
 
 State persistence includes:
 
-- Profile configuration (YAML or JSON)
+- Server configuration (YAML or JSON)
 - World metadata
 - Backup metadata
-- Active profile tracking
+- Active server tracking
 - Server runtime state
 
 Implementation:
@@ -366,8 +432,8 @@ Future Enhancements (v2+):
 
 - Detect unexpected server termination
 - Surface error state in UI
-- Prevent launch if profile invalid
-- Prevent profile change while running
+- Prevent launch if server invalid
+- Prevent server change while running
 - Log all failure events
 - Maintain consistent server state machine
 
@@ -395,7 +461,7 @@ To preserve portability:
 /models
 /process
 /frontend
-/profiles
+/servers
 /worlds
 /mods
 /uploads
@@ -411,7 +477,7 @@ Structure may evolve but boundaries should remain.
 Runtime metadata is stored under:
 
 data/
-  profiles/
+  servers/
   worlds/
   index/
 

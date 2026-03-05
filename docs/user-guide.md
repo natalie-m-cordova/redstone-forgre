@@ -8,7 +8,7 @@ This guide explains how to use the Minecraft Control Panel.
 
 - Start the Minecraft server
 - Stop the Minecraft server
-- Create your own profile
+- Create your own server
 - Create your own world
 - Add mods (Forge or Fabric)
 - Use Vanilla mode
@@ -32,15 +32,15 @@ Detailed instructions will be added once MVP UI is implemented.
 - Pressing Start
 - Checking server status
 
-## Creating a Profile
+## Creating a Server
 - Choosing loader
-- Naming profile
+- Naming server
 - Selecting mods
 - Assigning a world
 
 ## Creating a World
 - Creating new world
-- Assigning to profile
+- Assigning to server
 - Switching worlds safely
 
 ## Adding Mods

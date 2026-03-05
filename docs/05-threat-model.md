@@ -26,7 +26,7 @@ Mitigations:
 ## 2. Accidental World Loss
 
 Threat:
-- Overwriting world during profile change
+- Overwriting world during server change
 - User error during restore
 
 Impact:
@@ -99,3 +99,47 @@ Impact:
 Mitigations:
 - Retention policy
 - Size-based cleanup
+
+---
+
+## 7. Destructive Operations (Backup Restore / World Apply)
+Threat:
+- Kid/simple user restores wrong backup or overwrites a world inadvertently
+
+Impact:
+- Accidental world loss
+
+Mitigations:
+- Confirmation prompts with clear “this overwrites X” messaging
+- Require backups before applying world/mod changes
+- Advanced Mode gate for restore operations (optional)
+- Restore preview metadata (timestamp, world name, size)
+
+---
+
+## 8. Upload Abuse / Oversized Uploads
+Threat:
+- Large uploads fill disk or hang operations
+
+Impact:
+- Disk exhaustion, degraded performance
+
+Mitigations:
+- File size limits
+- Quarantine + validation pipeline
+- Upload progress + cancel support
+- Retention policies + disk free threshold checks
+
+---
+
+## 9. Telemetry + Polling Overload
+Threat:
+- Aggressive polling or bad UI loops overload backend
+
+Impact:
+- UI becomes unresponsive; backend load increases
+
+Mitigations:
+- SSE push for events
+- Rate-limited metrics polling (if used)
+- Backpressure handling on streaming endpoints
