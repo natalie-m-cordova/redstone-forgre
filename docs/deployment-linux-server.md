@@ -27,7 +27,7 @@ Example layout:
 ```
 /srv/minecraft/
 ├─ controller/
-├─ profiles/
+├─ servers/
 ├─ worlds/
 ├─ backups/
 └─ logs/

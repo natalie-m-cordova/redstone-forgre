@@ -210,7 +210,7 @@ __marimo__/
 # Redstone Forge – Runtime Data (MVP)
 # ============================================
 
-# Runtime server data (profiles, worlds, state)
+# Runtime server data (servers, worlds, state)
 # These are environment-specific and must never be committed.
 # JSON storage is MVP decision (see decision-log.md).
 # Will migrate to DB in future phase.
@@ -218,7 +218,9 @@ data/**
 
 # Keep scaffold folders + keepfiles tracked
 !data/
-!data/profiles/
+!data/servers/
 !data/worlds/
 !data/index/
 !data/**/.gitkeep
+
+.zip

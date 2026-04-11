@@ -12,7 +12,7 @@ These documents describe how the system is designed and deployed.
 
 - [Architecture](01-architecture.md)
 - [Phases](02-roadmap.md)
-- [Profiles and Worlds Design](03-profiles-worlds.md)
+- [Servers and Worlds Design](03-servers-worlds.md)
 - [Boundary Posture](04-network-boundary.md)
 - [Thread Model](05-threat-model.md)
 - [Deployment – Windows](deployment-windows.md)

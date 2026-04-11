@@ -5,7 +5,7 @@ router = APIRouter()
 # Mock in-memory server state (replaced later by real process manager)
 _SERVER_STATE = {
     "state": "STOPPED",
-    "activeProfileId": None,
+    "activeServerId": None,
     "activeWorldId": None
 }
 

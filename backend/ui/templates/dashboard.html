@@ -1,0 +1,40 @@
+﻿{% extends "base.html" %}
+{% block content %}
+  <div class="page-head">
+    <h1>Dashboard</h1>
+    <div class="statusbar">
+      <span class="pill" id="serverStatePill">STATE: …</span>
+      <span class="muted" id="serverStateMsg">Loading status…</span>
+    </div>
+  </div>
+
+  <section class="card">
+    <div class="card-title">Last Played (up to 5)</div>
+
+    <div class="carousel">
+      <button class="carousel-btn" type="button" id="carPrev">◀</button>
+
+      <div class="carousel-track" id="carTrack">
+        <div class="muted">Loading…</div>
+      </div>
+
+      <button class="carousel-btn" type="button" id="carNext">▶</button>
+    </div>
+  </section>
+  <section class="card">
+    <div class="card-title">Quick Start Grid</div>
+    <div id="gridMount" class="grid"></div>
+    <div class="muted note">
+      Grid is generated from <code>/api/servers</code>.
+    </div>
+  </section>
+
+  <!-- World hover popup placeholder -->
+  <div id="worldPopup" class="popup hidden">
+    <div class="popup-title" id="worldPopupTitle">World</div>
+    <img class="popup-thumb" src="/assets/mock-worlds/survival_world.png" alt="World thumbnail" />
+    <div class="popup-meta">
+      <div><span class="muted">Used by:</span> <span id="worldPopupUsedBy">…</span></div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,69 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{{ title }} - {{ app_name }}</title>
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="/static/css/app.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-title">{{ app_name }}</div>
+      <div class="brand-sub">LAN Web Control Panel (Stage 0)</div>
+    </div>
+
+    <div class="topbar-right">
+      <div class="mode-toggle">
+        <span class="mode-label">Mode:</span>
+        <button id="modeSimple" class="chip" type="button">Simple</button>
+        <button id="modeAdvanced" class="chip" type="button">Advanced</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside id="sidebar" class="sidebar expanded">
+      <button id="sidebarToggle" class="sidebar-toggle" type="button" title="Collapse/Expand">≡</button>
+
+      <nav class="nav">
+        <a class="nav-item {{ 'active' if page=='dashboard' else '' }}" href="/" title="Dashboard">
+          <span class="nav-ico">🏠</span><span class="nav-text">Dashboard</span>
+        </a>
+        <a class="nav-item {{ 'active' if page=='servers' else '' }}" href="/servers" title="Servers">
+          <span class="nav-ico">🎮</span><span class="nav-text">Servers</span>
+        </a>
+        <a class="nav-item {{ 'active' if page=='worlds' else '' }}" href="/worlds" title="Worlds">
+          <span class="nav-ico">🌍</span><span class="nav-text">Worlds</span>
+        </a>
+        <a class="nav-item {{ 'active' if page=='mods' else '' }}" href="/mods" title="Mods">
+          <span class="nav-ico">🧩</span><span class="nav-text">Mods</span>
+        </a>
+
+        <div class="nav-sep" data-advanced-only></div>
+
+        <a class="nav-item" href="#" data-advanced-only title="Terminal (Advanced)">
+          <span class="nav-ico">📃</span><span class="nav-text">Terminal</span>
+        </a>
+        <a class="nav-item" href="#" data-advanced-only title="Backups (Advanced)">
+          <span class="nav-ico">💾</span><span class="nav-text">Backups</span>
+        </a>
+        <a class="nav-item" href="#" data-advanced-only title="System (Advanced)">
+          <span class="nav-ico">📊</span><span class="nav-text">System</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <div class="content-inner">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="/static/js/app.js"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>
