@@ -1,12 +1,19 @@
 # Deployment – Windows Server
 
-This guide describes running Redstone Forge and Minecraft directly on a Windows machine.
+This guide describes running Redstone Forge locally on a Windows machine for development and testing purposes.
+
+This is NOT the recommended production setup.
+
+For real usage, the system should run on a Linux server.
 
 This configuration is intended for:
+- local development
+- UI testing
+- backend debugging
 
-- development
-- testing
-- temporary hosting
+⚠️ This setup runs the backend locally and does not reflect the production architecture.
+
+It is intended for development only.
 
 ---
 

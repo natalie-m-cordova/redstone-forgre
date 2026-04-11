@@ -1,25 +1,29 @@
 # Threat Model
 
-This document enumerates realistic risks within the LAN-only deployment model.
+This document enumerates realistic risks within the LAN-first deployment model.
+
+Redstone Forge assumes a **trusted LAN environment**, but all inputs and operations are treated defensively.
 
 ---
 
 ## 1. Untrusted Mod Upload
 
 Threat:
-- Malicious or corrupted .jar file uploaded via Web UI
+- Malicious or corrupted `.jar` file uploaded via Web UI
 
 Impact:
 - Server crash
 - Unexpected behavior
 - Disk pollution
+- Potential execution of unsafe code within Minecraft runtime
 
 Mitigations:
-- Quarantine folder
-- Hash calculation
-- File extension validation
-- Optional size limits
-- Manual curated mod list (v2+)
+- Quarantine upload directory
+- SHA-256 hash calculation
+- File extension validation (`.jar` only)
+- File size limits
+- Validation pipeline before moving to mod library
+- Stage 3+: curated/allowlisted mod sources
 
 ---
 
@@ -33,26 +37,29 @@ Impact:
 - Permanent world data loss
 
 Mitigations:
-- Backup before world or mod changes
+- Automatic backup before world or mod changes
 - Restore confirmation prompts
 - Backup retention policy
+- Clear UI warnings for destructive actions
 
 ---
 
 ## 3. Resource Exhaustion
 
 Threat:
-- Server consumes excessive RAM/CPU
-- Multiple instances (future) compete for resources
+- Minecraft server consumes excessive RAM/CPU
+- Future multi-instance usage causes contention
 
 Impact:
 - Host instability
-- Linux service crash
+- Service crash
+- System slowdown
 
 Mitigations:
-- Single-instance MVP
-- Future resource limits per instance
-- Monitoring of process state
+- Single-instance design (Stage 0–2)
+- Process monitoring
+- Stage 3+: resource limits per instance (CPU/RAM)
+- Clear visibility of resource usage in UI
 
 ---
 
@@ -68,78 +75,158 @@ Impact:
 Mitigations:
 - PID tracking
 - Graceful shutdown handling
-- Restart policy (future)
-- Clear ERROR state in UI
+- Crash detection and error state in UI
+- Stage 2+: restart policy and recovery handling
 
 ---
 
 ## 5. Path Traversal / Unsafe Input
 
 Threat:
-- Crafted upload attempts to write outside allowed directories
+- Crafted upload attempts to escape intended directories
 
 Impact:
 - File system corruption
+- Unauthorized file overwrite
 
 Mitigations:
 - Strict server-side path validation
-- No blind file writes
 - Controlled storage root
+- No user-controlled absolute paths
+- No blind file writes
 
 ---
 
-## 6. Disk Growth
+## 6. Disk Exhaustion
 
 Threat:
-- Backups accumulate indefinitely
+- Backups, logs, or uploads consume all disk space
 
 Impact:
-- Disk full → server crash
+- System instability
+- Failed server operations
+- Potential data loss
 
 Mitigations:
-- Retention policy
+- Backup retention policy (rotation)
 - Size-based cleanup
+- Disk usage monitoring
+- Upload size limits
 
 ---
 
-## 7. Destructive Operations (Backup Restore / World Apply)
+## 7. Destructive Operations (World Apply / Restore)
+
 Threat:
-- Kid/simple user restores wrong backup or overwrites a world inadvertently
+- User applies incorrect world or restores wrong backup
 
 Impact:
-- Accidental world loss
+- Accidental data loss
 
 Mitigations:
-- Confirmation prompts with clear “this overwrites X” messaging
-- Require backups before applying world/mod changes
-- Advanced Mode gate for restore operations (optional)
+- Explicit confirmation prompts
+- “This will overwrite X” messaging
+- Automatic backup before destructive operations
+- Advanced Mode gating (optional)
 - Restore preview metadata (timestamp, world name, size)
 
 ---
 
 ## 8. Upload Abuse / Oversized Uploads
+
 Threat:
-- Large uploads fill disk or hang operations
+- Large or repeated uploads degrade performance or fill disk
 
 Impact:
-- Disk exhaustion, degraded performance
+- Disk exhaustion
+- Slow or failed operations
 
 Mitigations:
 - File size limits
-- Quarantine + validation pipeline
-- Upload progress + cancel support
-- Retention policies + disk free threshold checks
+- Upload progress + cancellation
+- Quarantine validation pipeline
+- Disk threshold checks before accepting uploads
 
 ---
 
-## 9. Telemetry + Polling Overload
+## 9. Telemetry / Polling Overload
+
 Threat:
-- Aggressive polling or bad UI loops overload backend
+- Excessive polling or inefficient UI loops overload backend
 
 Impact:
-- UI becomes unresponsive; backend load increases
+- Increased CPU usage
+- UI instability or lag
 
 Mitigations:
-- SSE push for events
-- Rate-limited metrics polling (if used)
-- Backpressure handling on streaming endpoints
+- Server-Sent Events (SSE) for push updates
+- Rate-limited polling where necessary
+- Backpressure handling for streaming endpoints
+
+---
+
+## 10. Unauthorized LAN Access
+
+Threat:
+- Another device on the LAN accesses the UI or API
+
+Impact:
+- Unauthorized server control
+- Potential destructive actions
+
+Mitigations:
+- LAN-only exposure (no WAN)
+- No port forwarding
+- Stage 2–3: optional local authentication
+- Limit exposure to trusted network segments
+
+---
+
+## 11. Backend Misconfiguration
+
+Threat:
+- Incorrect service binding (e.g., 0.0.0.0 exposed unintentionally)
+- Firewall misconfiguration
+
+Impact:
+- Accidental public exposure
+- Increased attack surface
+
+Mitigations:
+- Bind backend to private interface only
+- Firewall restricted to LAN subnet
+- No public routing or DNS
+- Clear deployment documentation
+
+---
+
+## 12. Log / Data Leakage
+
+Threat:
+- Logs expose sensitive paths or system details
+
+Impact:
+- Information disclosure
+- Easier exploitation if system is exposed
+
+Mitigations:
+- Sanitize logs in UI (Simple Mode)
+- Avoid exposing full filesystem paths
+- Separate internal logs from UI-facing logs
+
+---
+
+# Summary
+
+Redstone Forge operates under a **defensive LAN model**:
+
+- All inputs are treated as untrusted
+- All destructive actions require safeguards
+- System exposure is minimized by design
+- Stability and data safety are prioritized over feature complexity
+
+The threat model evolves with system stages:
+
+- Stage 0–1: Focus on safe execution and input validation
+- Stage 2: Focus on stability, recovery, and hardening
+- Stage 3+: Expand capabilities while maintaining strict security boundaries

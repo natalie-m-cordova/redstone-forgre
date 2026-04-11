@@ -1,10 +1,31 @@
 # Roadmap
 
 This roadmap defines the staged evolution of Redstone Forge across
-development, deployment, and infrastructure transitions.
+development, deployment, and system stabilization.
 
-It aligns with the Architecture document and reflects real-world
-hardware lifecycle and migration planning.
+It aligns with the Architecture document and reflects a **Linux NAS-first deployment model**.
+
+---
+
+# Redstone Forge follows a stage-based development model:
+
+## Stage 0: Development MVP  
+- Mock system (no real Minecraft execution)  
+- UI + backend skeleton  
+
+## Stage 1: Linux Deployment  
+- First real usable system  
+- Runs on Linux NAS  
+- Kids can use it end-to-end  
+
+## Stage 2: Stabilization  
+- Bug fixes and reliability improvements  
+- Performance tuning  
+- Backup, telemetry, and UX hardening  
+
+## Stage 3: Enhancements  
+- New features and expansion  
+- Optional capabilities (desktop client, backend downloads, multi-instance, etc.)  
 
 ---
 
@@ -15,216 +36,201 @@ server execution.
 
 ## Deliverables
 
--   FastAPI backend skeleton
--   Web UI (Simple + Advanced toggle)
--   Server CRUD
-    -   Forge / Fabric / Vanilla selection
--   World CRUD
--   Mock start/stop endpoints
--   Curated mod multi-selection
--   Upload pipeline (mock validation)
--   Status display
--   Logging simulation
--   Clean project structure
--   **App-like UI interactions (no refresh)**
-    -   Dashboard controls update status in-place
-    -   Mock progress events for start/stop/upload to validate UX flow
--   **Progress + “server thinking” UI**
-    -   Popups/spinners for long operations (simulated)
+- FastAPI backend skeleton
+- Web UI (Simple + Advanced toggle)
+- Server CRUD
+  - Forge / Fabric / Vanilla selection
+- World CRUD
+- Mock start/stop endpoints
+- Curated mod multi-selection
+- Upload pipeline (mock validation)
+- Status display
+- Logging simulation
+- Clean project structure
+- **App-like UI interactions (no refresh)**
+- **Progress + “server thinking” UI (mocked)**
 
 ## Exit Criteria
 
--   UI functions end-to-end
--   Server and world configuration stored properly
--   No real subprocess execution yet
--   Ready for Windows host integration
--   SPA-like *feel* (no refresh) with mock state transitions
+- UI functions end-to-end
+- Server and world configuration stored properly
+- No real subprocess execution yet
+- Ready for real host integration
+- SPA-like *feel* (no refresh)
 
 ## Explicitly Excluded
 
--   Real Minecraft subprocess execution
--   Docker deployment
--   CurseForge import
--   Linux migration
--   Multi-instance support
--   Desktop client or wrapper
--   Backend-managed downloads
+- Real Minecraft subprocess execution
+- Docker deployment
+- CurseForge import
+- Multi-instance support
+- Desktop client
+- Backend-managed downloads
 
 ---
 
-# Stage 1 – Windows Host Integration
+# Stage 1 – Linux NAS Host Integration (Primary Deployment)
 
-**Goal:** Deploy Redstone Forge to Windows TEMP PC with real Minecraft
-server execution.
+**Goal:** Deploy Redstone Forge to a Linux NAS and enable real Minecraft server execution.
+
+This is the **first real runtime environment**.
 
 ## Deliverables
 
--   Real Minecraft subprocess execution
--   PID tracking and lifecycle control
--   Proper graceful shutdown handling
--   Real log streaming to UI
--   Automatic world backup before configuration changes
--   LAN firewall configuration
--   Stable local deployment
--   Clean installation process documentation
--   Static IP assignment or DHCP reservation
--   **Live console streaming (stdout)**
-    -   Real-time server output to UI
--   **Advanced console input (stdin)**
-    -   Send commands to server console (Advanced Mode)
--   **Progress events for real operations**
-    -   start/stop lifecycle
-    -   mod upload + validation stages
-    -   backup creation and restore
--   **Basic telemetry**
-    -   CPU/RAM utilization from the server process
+- Real Minecraft subprocess execution (Linux)
+- PID tracking and lifecycle control
+- Graceful shutdown handling
+- systemd service integration
+- Real log streaming to UI
+- Automatic world backup before configuration changes
+- LAN firewall configuration
+- Static IP or DHCP reservation
+- Stable NAS-based deployment
+- Clean installation documentation
+
+### Runtime Features
+
+- **Live console streaming (stdout)**
+- **Advanced console input (stdin)**
+- **Progress events for real operations**
+- **Basic telemetry (CPU/RAM)**
 
 ## Exit Criteria
 
--   Kids can launch and stop the real Minecraft server from UI
--   Logs stream reliably
--   Backups trigger correctly
--   System stable for daily use
--   real streaming console + progress events
+- Kids can launch/stop server from UI
+- Logs stream reliably
+- Backups trigger correctly
+- System stable for daily use
+- Backend fully running on Linux NAS
 
 ## Explicitly Excluded
 
--   Linux migration
--   Multi-instance support
--   Backend-managed downloads
--   Docker/k8s experimentation
+- Docker/k8s experimentation
+- Multi-instance support
+- Desktop client
+- Backend-managed downloads
 
 ---
 
-# Stage 2 – Linux Migration (Summer Hardware Event)
+# Stage 2 – Stabilization (Post-Deployment Hardening)
 
-**Goal:** Repurpose the old desktop as a dedicated Linux backend host and migrate Redstone Forge from Windows to Linux.
-
-This stage focuses strictly on infrastructure transition and system stability.
-
-This stage coincides with the purchase of the new desktop for the kids, eliminating the need for shared frontend/backend hardware.
+**Goal:** Harden the Linux deployment and improve reliability before adding new features.
 
 ## Deliverables
 
--   Full wipe of old Windows host
--   Linux installation and base configuration
--   Backend deployment on Linux (bare metal)
--   systemd service integration
--   Data migration (servers, worlds, mod library, backups, logs, database)
--   Validated restore procedure on Linux
--   Static IP assignment or DHCP reservation
--   LAN firewall configuration
--   End-to-end validation testing
+- Bug fixes from real-world usage
+- Performance tuning:
+  - server startup time
+  - log streaming reliability
+  - backup speed
+- Hardened configuration:
+  - paths
+  - permissions
+  - service restart behavior
+- Improved observability:
+  - clear state machine (STOPPED/STARTING/RUNNING/ERROR)
+  - actionable error messages
+
+### UX Enhancements
+
+- Dashboard telemetry (CPU/RAM/disk)
+- Operation progress bars
+- Activity feed (“what is happening now”)
+
+### Data Safety
+
+- Backup retention policy (rotation/limits)
+- Restore workflow (tested + documented)
 
 ## Exit Criteria
 
--   Backend fully operational on Linux
--   Minecraft server launches and stops successfully
--   Log streaming functional
--   Backup and restore validated on Linux
--   All servers and worlds migrated successfully
--   System stable for daily use
-
-## Explicitly Excluded
-
--   Docker or Kubernetes deployment
--   Major feature expansion
--   Multi-instance support
--   Desktop client implementation
--   Backend-managed downloads
+- System stable for extended daily use
+- No critical reliability issues
+- Backup/restore fully validated
+- UI reflects real system state accurately
 
 ---
 
-# Stage 3 – Post-Migration Stabilization + Enhancements (v2+)
+# Stage 3 – Enhancements (v2+)
 
-**Goal:** Stabilize Redstone Forge on the Linux host, then incrementally add v2+ capabilities without breaking core invariants.
+**Goal:** Expand capabilities without breaking core architectural invariants.
 
-This stage begins only after Stage 2 exit criteria are met (Linux deployment stable for daily use).
+## Deliverables (Ordered)
 
-## Deliverables (Stabilization First)
--   Bug fixes discovered during Linux migration
--   Performance tuning (startup time, log streaming, backup speed)
--   Hardened configuration defaults (paths, permissions, service restart behavior)
--   Improved observability:
-    -   clearer status states (STOPPED/STARTING/RUNNING/STOPPING/ERROR)
-    -   actionable error messages in UI
--   **Dashboard Rich Telemetry + UX polish**
-    -   graphs/status bars for CPU/RAM/disk
-    -   operation progress bars (uploads, backups, start)
-    -   “what is happening now” activity feed
--   Backup retention policy implementation (rotation/limits) consistent with architecture invariants
--   Restore workflow (documented + tested)
+### 1) Deployment Enhancements (Optional)
+- Docker Compose packaging (optional)
+- Documented install paths:
+  - Bare metal (primary)
+  - Docker (secondary)
+- No Kubernetes yet
 
-## Deliverables (Enhancements – Ordered)
-1) **Deployment Enhancements (Optional)**
-   -   Docker Compose packaging (optional deployment path; bare metal remains supported)
-   -   Documented “Bare Metal vs Docker” install paths
-   -   No Kubernetes yet (stretch later)
+### 2) Mod Acquisition Enhancements
+- Backend-managed downloads
+- Allowlist / curated catalog
+- Provenance + hash tracking
+- Reuse quarantine/validation pipeline
 
-2) **Mod Acquisition Enhancements**
-   -   Backend-managed downloads (allowlist/curated)
-   -   Provenance + hash recording
-   -   Reuse quarantine/validation pipeline
-   -   CurseForge import (optional):
-       -   Detect installed CurseForge modpacks
-       -   Parse manifest
-       -   Generate server server from modpack
-       -   Validate loader and Minecraft version compatibility
+- Optional CurseForge import:
+  - Parse modpacks
+  - Validate compatibility
+  - Generate server configs
 
-3) **Desktop Client (Optional)**
-   -   Thin launcher client that uses the same backend API
-   -   Option: wrapper around Web UI (Tauri/Electron) with kid-friendly shortcuts
+### 3) Desktop Client (Optional)
+- Thin client (Tauri/Electron)
+- Uses backend API only
+- No duplicated logic
 
-4) **Multi-Instance Foundation (Prep Work)**
-   -   Introduce instance-aware data model and routing (even if still running one instance)
-   -   Define per-instance ports, directories, and log/backup isolation
-   -   Do not enable multiple instances by default until resource limits exist
+### 4) Multi-Instance Foundation
+- Instance-aware data model
+- Per-instance isolation:
+  - ports
+  - directories
+  - logs
+  - backups
+- Do not enable multi-instance yet
 
 ## Exit Criteria
--   Linux system remains stable under normal use for an extended period
--   Enhancements do not violate architectural invariants
--   Clear install path(s) exist and are documented (bare metal + optional Docker)
--   Mod ingestion and validation remain safe and auditable
--   Desktop client (if implemented) does not duplicate backend logic
--   dashboards/graphs, backup UX, richer advanced mode
 
-## Explicitly Excluded (until explicitly promoted)
--   Kubernetes / k3s deployment as a primary install method
--   Public internet exposure / WAN access
--   Multi-tenant user accounts or hosted-panel behavior
--   “Guaranteed compatibility” mod dependency resolution engine
+- Linux system remains stable
+- Enhancements do not violate architecture
+- Install paths clearly documented
+- Mod ingestion remains safe and auditable
+
+## Explicitly Excluded
+
+- Public internet exposure
+- Multi-tenant system
+- Billing or marketplace features
+- Guaranteed mod compatibility engine
 
 ---
 
 # Guiding Principles
 
--   Infrastructure stability before feature complexity
--   Migration before orchestration experiments
--   Add capabilities intentionally, not reactively
--   Preserve LAN-first security model unless explicitly redesigned
--   Avoid over-engineering during early stages
+- Infrastructure stability before feature complexity
+- No artificial migration stages
+- Linux NAS is the primary deployment target
+- Add capabilities intentionally, not reactively
+- Preserve LAN-first security model
+- Avoid over-engineering early
 
 ---
 
-# Versioning Strategy (Future)
+# Versioning Strategy (Updated)
 
-Version tags may begin after Stage 1 (real execution stable).
-
-Suggested approach: 
-
-- v0.x → Stage 0 - Development MVP 
-- v1.x → Stage 1 - Stable Windows deployment 
-- v2.x → Stage 2 - Stable Linux deployment
-- v3.x → Stage 3 - Feature expansion milestones 
+- v0.x → Stage 0 (Development MVP)
+- v1.x → Stage 1 (Linux deployment)
+- v2.x → Stage 2 (Stabilized system)
+- v3.x → Stage 3 (Feature expansion)
 
 ---
 
-# Future Roadmap Extensions (Planned Documentation)
+# Future Roadmap Extensions
 
 ## Milestone Mapping
-- How GitHub Milestones map to phases
+- GitHub milestones → stages
 
 ## Upgrade Path
-- Windows → Linux migration plan
-- Runner abstraction changes
-- Storage path migration
+- Storage evolution (JSON → SQLite)
+- Optional Docker adoption
+- Multi-instance enablement

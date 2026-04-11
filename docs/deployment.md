@@ -1,4 +1,4 @@
-# Deployment
+# Deployment Overview
 
 This section documents how to deploy Redstone Forge in different environments.
 
@@ -25,33 +25,33 @@ See:
 
 ---
 
-## Windows Server
+## Local Development (Windows)
 
-Used for early development or temporary hosting.
+Used for early development or testing only.
 
 Runs:
 
-- Redstone Forge API
-- Minecraft Server
-- Servers and Worlds storage
+- Redstone Forge API (local)
+- Mock or test Minecraft server
+- UI and backend development
 
 See:
 
-→ [deployment-windows-server.md](deployment-windows-server.md)
+→ [deployment-local-windows-server.md](deployment-local-windows-server.md)
 
 ---
 
 ## Windows Controller
 
-Optional control machine used to manage the server.
+Client machine used to manage the server.
 
 Runs:
 
-- Redstone Forge UI / Controller
-- API client tools
-- Server management
+- Web browser (control panel)
+- Optional API client tools
+- Minecraft client
 
-Does NOT host Minecraft itself.
+Does NOT host the backend or Minecraft server.
 
 See:
 
@@ -64,11 +64,11 @@ See:
 Production deployment:
 
 ```
-Controller PC (Windows)
+Windows Controller (Client)
 │
-│ REST API
+│ HTTP (LAN)
 ▼
-Linux Server
+Linux Server (Backend)
 │
 ├─ Redstone Forge API
 ├─ Minecraft Server
@@ -96,10 +96,14 @@ Redstone Forge **does not replace host security protections** such as antivirus 
 
 # Future Improvements
 
-Planned improvements to deployment include:
+Planned improvements aligned with later stages include:
 
-- Automated installers
-- Docker support
-- Remote management
-- Backup scheduling
-- System monitoring
+- Stage 2 (Stabilization):
+  - Backup scheduling
+  - System monitoring
+  - Improved reliability tooling
+
+- Stage 3+ (Enhancements):
+  - Automated installers
+  - Docker support (optional)
+  - Remote management features
