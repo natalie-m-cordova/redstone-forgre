@@ -32,3 +32,15 @@ def worlds(request: Request):
 @router.get("/mods", response_class=HTMLResponse)
 def mods(request: Request):
     return templates.TemplateResponse("mods.html", _ctx(request, "mods", "Mods"))
+
+@router.get("/terminal", response_class=HTMLResponse)
+def terminal(request: Request):
+    return templates.TemplateResponse("terminal.html", _ctx(request, "terminal", "Terminal"))
+
+@router.get("/backups", response_class=HTMLResponse)
+def backups(request: Request):
+    return templates.TemplateResponse("backups.html", _ctx(request, "backups", "Backups"))
+
+@router.get("/system", response_class=HTMLResponse)
+def system(request: Request):
+    return templates.TemplateResponse("system.html", _ctx(request, "system", "System"))
