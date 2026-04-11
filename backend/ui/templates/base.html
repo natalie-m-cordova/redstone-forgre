@@ -43,13 +43,13 @@
 
         <div class="nav-sep" data-advanced-only></div>
 
-        <a class="nav-item" href="#" data-advanced-only title="Terminal (Advanced)">
+        <a class="nav-item {{ 'active' if page=='terminal' else '' }}" href="/terminal" data-advanced-only title="Terminal">
           <span class="nav-ico">📃</span><span class="nav-text">Terminal</span>
         </a>
-        <a class="nav-item" href="#" data-advanced-only title="Backups (Advanced)">
+        <a class="nav-item {{ 'active' if page=='backups' else '' }}" href="/backups" data-advanced-only title="Backups">
           <span class="nav-ico">💾</span><span class="nav-text">Backups</span>
         </a>
-        <a class="nav-item" href="#" data-advanced-only title="System (Advanced)">
+        <a class="nav-item {{ 'active' if page=='system' else '' }}" href="/system" data-advanced-only title="System">
           <span class="nav-ico">📊</span><span class="nav-text">System</span>
         </a>
       </nav>
