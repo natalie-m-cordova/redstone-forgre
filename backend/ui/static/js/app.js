@@ -28,6 +28,7 @@ function setMode(mode) {
 async function refreshStatus() {
   const pill = document.getElementById("serverStatePill");
   const msg = document.getElementById("serverStateMsg");
+  if (!pill || !msg) return;
   try {
     const data = await api("/status");
     pill.textContent = `STATE: ${data.state}`;
@@ -260,7 +261,6 @@ async function loadDashboardData() {
 window.addEventListener("DOMContentLoaded", async () => {
   bindModeToggle();
   bindSidebar();
-  bindButtons();
   bindCarousel();
   bindWorldHoverPopup();
   await refreshStatus();
