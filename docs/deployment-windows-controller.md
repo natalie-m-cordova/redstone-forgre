@@ -1,252 +1,198 @@
-# Troubleshooting
+# Deployment – Windows Controller (Client Machines)
 
-This document contains known issues, diagnostics, and fixes encountered when deploying or running Redstone Forge.
+This guide describes how to use Redstone Forge from a Windows PC.
 
-The goal is to capture real-world problems encountered during development and deployment so future installations are faster and easier.
+These machines act as **controllers (clients)** only.
+This guide is designed for everyday use — no technical setup required.
+
+They do NOT run the backend server.
 
 ---
 
-# Quick Diagnostics
+# What This Is
 
-If the system is not working as expected, check the following first:
+Your PC is used to:
+- Open the control panel (in a browser)
+- Start and stop the Minecraft server
+- Select worlds and mods
+- Upload mods (optional)
+- Connect to the Minecraft server
 
-1. Verify Python is installed
-``` 
+The backend runs on a separate **Linux server (NAS)**.
+
+---
+
+# Requirements
+
+- Windows 10 or Windows 11
+- Connected to the same home network (LAN) as the server
+- A modern web browser:
+  - Chrome (recommended)
+  - Edge
+  - Firefox
+
+---
+
+# 1. Connect to the Control Panel
+👉 If you don’t know the server IP, ask the person who set up the server.
+
+Open your browser and go to:
+```
+http://<server-ip>:8000
+```
+
+Example:
+```
+http://192.168.1.50:8000
+```
+
+👉 Bookmark this page for easy access.
+
+---
+
+# 2. Using the Control Panel
+
+## Start the Server
+
+- Click **Start**
+- Wait for status to change to **Running**
+- This may take a few seconds
+- Do not click Start multiple times
+
+## Stop the Server
+
+- Click **Stop**
+- Wait for shutdown to complete
+
+---
+
+## Select a World
+
+- Choose a world from the list
+- Confirm the change if prompted
+
+⚠️ Changing worlds may overwrite current state  
+→ The system will create a backup automatically
+
+---
+
+## Select Mods
+
+- Choose mods from the available list
+- Apply changes when prompted
+
+---
+
+# 3. Playing Minecraft
+
+1. Open Minecraft
+2. Go to **Multiplayer**
+3. Add Server:
+```
+<server-ip>
+```
+
+Example:
+```
+192.168.1.50
+```
+4. Click **Join Server**
+
+---
+
+# 4. Uploading Mods (Optional)
+
+If enabled:
+
+- Go to upload section
+- Select `.jar` file
+- Upload through the browser
+
+Rules:
+
+- Only `.jar` files are allowed
+- Large files may be rejected
+- Mods that fail validation will be rejected
+
+---
+
+# 5. Optional: Python (Advanced Users Only)
+
+Python is NOT required for normal use.
+
+It may be installed for:
+
+- debugging
+- development
+- API testing
+
+## Verify Python
+```
 python --version
 ```
 
 Expected:
 ```
-Python 3.12.x
+Python 3.12+
+```
+
+## Example API Test (Optional)
+
+PowerShell:
+```
+Invoke-RestMethod http://<server-ip>:8000/status
 ```
 
 ---
 
-2. Verify the API server is running
+# 6. Troubleshooting (Basic)
 
-Open:
-```
-http://127.0.0.1:8000/status
-```
+## Cannot Open Control Panel
 
-Expected response:
-
-```
-{
-  "ok": true,
-  "state": "STOPPED",
-  "activeServerId": null,
-  "activeWorldId": null
-}
-```
+- Verify correct server IP
+- Ensure you are on the same network
+- Ask to confirm server is running
 
 ---
 
-3. Verify API documentation
-```
-http://127.0.0.1:8000/docs
-```
-
-If this page loads, the API is running correctly.
+## Server Won’t Start
+- Wait a few seconds and try again
+- Ensure a world is selected
+- Check with admin (server may be offline)
 
 ---
 
-# Windows Issues
-## PowerShell Script Execution Disabled
-### Problem
-PowerShell blocks execution of scripts when activating a Python virtual environment.
-
-Example error:
-
-```
-Activate.ps1 cannot be loaded because running scripts is disabled on this system
-```
-### Fix
-
-Run PowerShell as your normal user and execute:
-```
-Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
-```
-This allows locally created scripts to run.
+## Minecraft Cannot Connect
+- Verify server is running
+- Verify correct IP address
+- Ensure no typos
 
 ---
 
-## PowerShell curl Command Fails
-### Problem
-
-PowerShell aliases `curl` to `Invoke-WebRequest`, which does not support standard curl flags.
-
-Example error:
-```
-Invoke-WebRequest : A parameter cannot be found that matches parameter name 'X'
-```
-### Fix
-
-Use Invoke-RestMethod instead.
-
-Example:
-
-```
-# Start Server
-Invoke-RestMethod -Method Post http://127.0.0.1:8000/start
-
-# Stop server:
-Invoke-RestMethod -Method Post http://127.0.0.1:8000/stop
-```
+## Upload Fails
+- Ensure file is .jar
+- Try a smaller file
+- Retry upload
 
 ---
 
-## Python Command Not Found
-### Problem
-
-Running python returns:
-
-```
-python is not recognized as an internal or external command
-```
-
-### Cause
-
-Python was installed without adding it to the system PATH.
-
-### Fix
-
-Reinstall Python and ensure the following option is checked:
-
-```
-Add Python to PATH
-```
-
-Alternatively verify Python installation using:
-
-```
-where python
-```
+## Notes
+- Do NOT install the backend on this machine
+- Do NOT run the server locally on this machine
+- All server operations happen on the Linux backend
 
 ---
 
-# API Issues
-## Server Does Not Start
-### Symptoms
+## Summary
 
-Running:
+The Windows controller is a simple client interface.
 
-```
-python -m uvicorn backend.main:app
-```
+- Browser = control panel
+- Backend = server authority
+- Minecraft connects directly to the server
 
-Fails with an import error.
+This keeps the system:
 
-### Possible Causes
-- Dependencies not installed
-- Virtual environment not active
-- Wrong working directory
-
-### Fix
-
-Ensure dependencies are installed:
-
-```
-python -m pip install -r backend/requirements.txt
-```
-
-Verify the working directory is the project root.
-
----
-
-## Port Already in Use
-### Problem
-
-Server fails to start with:
-```
-Address already in use
-```
-
-### Cause
-
-Another process is already using port **8000**.
-
-### Fix
-
-Option 1 — stop the existing process.
-
-Option 2 — run on a different port.
-
-Example:
-
-```
-python -m uvicorn backend.main:app --port 8001
-```
-
----
-
-# Browser Issues
-## API Docs Not Loading
-### Symptoms
-
-Opening /docs results in an error.
-
-### Checks
-
-Verify server is running:
-
-```
-http://127.0.0.1:8000/status
-```
-
-If status works but /docs does not, restart the API server.
-
----
-
-## Swagger Favicon Not Updating
-### Status
-
-This is a cosmetic issue and does not impact system functionality.
-
-### Resolution
-
-This issue is currently ignored for MVP.
-
-Future versions may include a customized Swagger UI configuration.
-
----
-
-# Minecraft Issues (Future)
-
-These troubleshooting steps will be expanded when the Minecraft runner is implemented.
-
-Planned troubleshooting areas:
-
-- Java version mismatch
-- Forge loader failures
-- World corruption recovery
-- Port conflicts
-- Mod compatibility errors
-
----
-
-# Logging
-
-Future versions will include structured logging.
-
-Planned locations:
-
-```
-logs/controller.log
-logs/minecraft.log
-```
-
-These logs will assist with diagnosing runtime issues.
-
----
-
-# Reporting Issues
-
-When reporting a problem include:
-1. Operating system
-2. Python version
-3. Java version
-4. Error messages
-5. Steps to reproduce
-
-This information significantly improves debugging efficiency.
+- simple
+- safe
+- easy to use

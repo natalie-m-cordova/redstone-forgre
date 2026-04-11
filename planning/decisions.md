@@ -166,3 +166,10 @@ Architecture documents may continue to use “Profiles” as the canonical model
 
 Future cleanup step:
 - Add a short mapping note in `docs/03-profiles-worlds.md` (Servers UI == Profiles model).
+
+## 2026-04-011 - Linux NAS as Primary Deployment Target
+**Decision:** Redstone Forge will use Linux NAS as the primary real-host deployment target beginning with Stage 1.  Windows host execution is no longer the primary deployment path.  
+**Scope:** Stage1+  
+**Reason:** Improves operational isolation, reduces migration churn, aligns real deployment with long-term architecture, and avoids hosting backend/server workloads on a personal workstation
+**Supersedes:** Windows-first execution path in roadmatp/architecture staging
+**Impact:**  Stage 1 becomes Linux host integration; Windows becomes optional dev-only local testing, not primary deployment.

@@ -26,11 +26,11 @@ def favicon():
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 app.mount("/assets", StaticFiles(directory=str(ASSETS_DIR)), name="assets")
 
-# UI routes
-app.include_router(ui_router)
-
 # API routes
 app.include_router(system.router)
 app.include_router(servers.router, prefix="/servers", tags=["servers"])
 app.include_router(worlds.router, prefix="/worlds", tags=["worlds"])
 app.include_router(ui_data.router, prefix="/api", tags=["ui"])
+
+# UI routes
+app.include_router(ui_router)

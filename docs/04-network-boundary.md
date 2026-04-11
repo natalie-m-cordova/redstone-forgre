@@ -1,9 +1,17 @@
+# Network Boundary
+
+This document defines the network exposure and security boundaries of Redstone Forge.
+
+Redstone Forge is designed as a **LAN-first system** and is **not intended for public internet exposure**.
+
+---
+
 # 1. Inbound Network Scope
 
 - No router port forwarding
 - No public internet exposure
 - Backend bound to private network interface only
-- Accessible only within home network
+- Accessible only within home LAN
 - No reverse proxy
 - No cloud deployment
 
@@ -13,35 +21,70 @@ Inbound access from the public internet is not supported in any stage unless exp
 
 # 2. Outbound Network Scope
 
-- Outbound internet access is permitted.
-- MVP: Mods are downloaded on client machines and uploaded via LAN Web UI.
-- v2+: Backend may download mods outbound from curated/allowlisted sources.
-- Outbound connectivity does not imply inbound exposure.
+- Outbound internet access is permitted
+- Stage 0 / Stage 1:
+  - Mods are downloaded on client machines
+  - Uploaded to backend via LAN Web UI
+- Stage 3+:
+  - Backend may download mods from curated / allowlisted sources
+
+Outbound connectivity does **not** imply inbound exposure.
 
 ---
 
-# 3. Windows Phase Security
+# 3. Backend Host Network Controls (Linux NAS)
 
-- Windows Firewall configured for Private network only
-- No inbound public exposure
-- Minecraft server accessible only via LAN IP
-
----
-
-# 4. Linux Phase Security
-
-- firewalld or UFW limited to LAN subnet
-- Service not bound to public interface
-- No public listening ports
+- Firewall (UFW or firewalld) restricted to LAN subnet only
+- Backend service bound to private interface (e.g., 192.168.x.x)
+- No services exposed on public interfaces
+- Only required ports open:
+  - Web UI / API
+  - Minecraft server port (LAN only)
 
 ---
 
-# 5. Non-Goals
+# 4. Client Access Model
 
-This system will NOT:
+- Kid PCs access backend via browser over LAN
+- Minecraft clients connect directly to server via LAN IP
+- No direct filesystem access to backend
+- All control flows through backend API
+
+---
+
+# 5. Security Invariants
+
+The following must always remain true:
+
+- System is LAN-only unless explicitly redesigned
+- No inbound public access
+- No external DNS or public routing required
+- Backend is the single entry point for control operations
+- Uploaded files are treated as untrusted input
+- Network exposure must remain minimal and intentional
+
+---
+
+# 6. Non-Goals
+
+Redstone Forge will NOT:
 
 - Be publicly hosted
 - Support cloud exposure
-- Provide public authentication mechanisms
+- Provide public authentication or internet-facing access
 - Act as a multi-tenant service
 - Function as a hosted Minecraft provider
+
+---
+
+# Summary
+
+Redstone Forge operates entirely within a **trusted LAN boundary**.
+
+All external interaction is **outbound-only**, and all inbound control is restricted to local network clients.
+
+This model prioritizes:
+
+- Security by default
+- Simplicity of deployment
+- Protection against unintended exposure

@@ -14,7 +14,7 @@ It serves as the authoritative reference for:
 - Data and process models
 - Migration constraints
 - MVP limitations
-- Target (v2+) architecture direction
+- Stage-based architecture direction
 
 This is a living document and should evolve intentionally, not reactively.
 
@@ -27,12 +27,23 @@ Redstone Forge is designed to:
 
 - Be LAN-first and secure by default
 - Be maintainable long-term
-- Avoid Windows-only coupling
+- Treat Linux as the primary deployment environment without making the codebase Linux-locked
 - Evolve from MVP to a more capable final product without requiring architectural rewrites
 - Keep implementation details separate from architectural truths
 
 Architecture defines what must remain true over time.  
 MVP defines what is temporarily limited.
+
+## Stage Alignment
+
+This architecture aligns with the stage-based roadmap:
+
+- Stage 0: Development MVP (mock system)
+- Stage 1: Linux Deployment (first real system)
+- Stage 2: Stabilization (hardening and reliability)
+- Stage 3+: Enhancements (feature expansion)
+
+All references to future capabilities in this document map to these stages.
 
 ---
 
@@ -46,18 +57,18 @@ MVP defines what is temporarily limited.
 - Web-based UI (LAN only)
 - Mod ingestion via Web UI upload
 - Automatic backup before configuration changes
-- Windows-first deployment
+- Linux NAS deployment as the primary real-host target
 
-## 1.2 Target Product Direction (v2+)
+## 1.2 Target Product Direction (Long-Term)
 
 - Backend-managed mod downloads
 - Curated mod catalog
 - Provenance tracking and hashing
-- Linux NAS hosting as primary deployment target
 - Optional desktop launcher client for kid-friendly access
 - Optional containerized deployment (Docker)
 - Optional single-node orchestration deployment (e.g., k3s/microk8s) for learning purposes
 - Potential multi-instance support
+- Optional HTTPS and local authentication for hardened LAN deployments
 
 ## 1.3 Explicit Non-Goals (MVP)
 
@@ -68,7 +79,7 @@ MVP defines what is temporarily limited.
 - No automated dependency resolution
 - No CurseForge API integration (MVP)
 
-## 1.4 Explicit Non-Goals (v2+)
+## 1.4 Long-Term Product Non-Goals
 
 - Not a public internet-facing hosting platform or multi-tenant control panel
 - No WAN/remote access by default (LAN-first remains the default posture)
@@ -103,7 +114,7 @@ It does not access the filesystem directly.
         |
         | HTTP (LAN only)
         v
-[FastAPI Backend - Windows]
+[FastAPI Backend - Linux NAS]
         |
         | Subprocess control
         v
@@ -115,7 +126,7 @@ It does not access the filesystem directly.
 
 ---
 
-## 2.2 Target System Diagram (v2+ on Linux NAS)
+## 2.2 Target System Diagram (Final Product Direction)
 
 ```
 [Kid PC Browser]
@@ -242,7 +253,7 @@ Implementation note (non-binding):
   - automatic backup before change
   - clear confirmation prompts for destructive operations
 
-## 3.3 Desktop Client (v2+ Optional)
+## 3.3 Desktop Client (Stage 3+ Optional)
 
 - Thin client communicating with backend API
 - May wrap Web UI (Tauri/Electron) or provide simplified launcher
@@ -251,26 +262,47 @@ Implementation note (non-binding):
 
 # 4. Machine Roles
 
-## 4.1 FastAPI Backend - Windows
+## 4.1 Backend Host - Linux NAS
 
-- Runs backend
+- Primary deployment host
+- Runs FastAPI backend
 - Runs Minecraft server
-- Stores all files locally
+- Stores runtime data locally or on attached NAS-managed storage
+- Hosts:
+  - servers
+  - worlds
+  - mods
+  - uploads
+  - backups
+  - logs
+  - metadata/state
+
+Responsibilities:
+- Backend orchestration
+- Process lifecycle control
+- File validation and storage
+- Backup execution
+- Runtime state persistence
 
 ## 4.2 Kid PCs
 
-- Access UI
-- Upload mods via UI
+- Access UI via browser over LAN
+- Upload mods via UI (MVP)
 - Connect to Minecraft server via LAN
+- May use CurseForge locally for client-side mod discovery/downloads
 
-## 4.3 Fast API Backend - Linux (Stage 2+)
+Constraints:
+- No direct filesystem access to backend storage
+- No server authority outside backend API
 
-- Hosts backend
-- Hosts Minecraft server
-- Centralizes storage
-- Replaces FastAPI Backend - Windows host
+## 4.3 Developer Machine (Optional / Non-Production)
 
-Architecture must remain OS-agnostic.
+- Used for development and testing only
+- May run local backend/frontend for short-lived validation
+- Must not serve as the primary persistent backend host
+- Must not become the authoritative runtime storage location
+
+Architecture must remain OS-agnostic even though Linux NAS is the primary deployment target.
 
 ---
 
@@ -328,7 +360,7 @@ Storage zones:
 
 ---
 
-## 6.2 Target Product — Backend-Managed Downloads (v2+)
+## 6.2 Target Product — Backend-Managed Downloads (Stage 3+)
 
 Flow:
 
@@ -410,7 +442,7 @@ MVP Security Posture:
 - Uploaded/downloaded files treated as untrusted input
 - Logs must not expose sensitive host path details in Simple Mode
 
-Future Enhancements (v2+):
+Future Enhancements (Stage 3+):
 
 - HTTPS (self-signed or internal cert)
 - Local authentication
@@ -439,7 +471,9 @@ Future Enhancements (v2+):
 
 ---
 
-# 12. Windows → Linux Migration Constraints
+# 12. Portability and Host Constraints
+
+Redstone Forge is deployed primarily on Linux NAS, but the codebase must remain portable for development and future host changes.
 
 To preserve portability:
 
@@ -512,7 +546,7 @@ Redstone Forge is designed as a:
 - LAN-first
 - Secure-by-default
 - Single-instance orchestration system
+- Linux NAS-hosted control platform
 - With controlled mod ingestion
-- And a clear migration path to Linux NAS
 
-The architecture defines stable boundaries and invariants while allowing the implementation to evolve from MVP to a more capable final product without requiring structural rewrites.
+The architecture defines stable boundaries and invariants while allowing the implementation to evolve from MVP to a more capable long-term platform without requiring structural rewrites.

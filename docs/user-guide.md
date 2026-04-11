@@ -21,38 +21,81 @@ This guide explains how to use the Minecraft Control Panel.
 - Do not change mods on an existing world unless you understand the risks
 - Always stop the server properly before leaving
 
-Detailed instructions will be added once MVP UI is implemented.
+---
+
+# Starting the Server
+
+1. Open the control panel in your browser
+2. Make sure a server is selected
+3. Click **Start**
+4. Wait until the status shows **Running**
 
 ---
 
-# COMING SOON
+# Stopping the Server
 
-## Starting the Server
-- Selecting Forge, Fabric, or Vanilla
-- Pressing Start
-- Checking server status
+1. Click **Stop**
+2. Wait for the server to fully shut down
 
-## Creating a Server
-- Choosing loader
-- Naming server
-- Selecting mods
-- Assigning a world
+⚠️ Do NOT close the page while the server is stopping
 
-## Creating a World
-- Creating new world
-- Assigning to server
-- Switching worlds safely
+---
 
-## Adding Mods
-- Selecting from curated list
-- Multi-select behavior
-- Mod compatibility warnings
 
-## Stopping the Server
-- Proper shutdown procedure
-- What not to do
+# Creating a Server
 
-## Common Mistakes
-- Mixing Forge and Fabric
-- Changing mods on existing worlds
-- Force closing server
+1. Choose a loader:
+   - Forge (mods)
+   - Fabric (mods)
+   - Vanilla (no mods)
+2. Give your server a name
+3. Select mods (if using Forge or Fabric)
+4. Assign a world
+
+---
+
+# Creating a World
+
+1. Create a new world from the UI
+2. Assign it to your server
+3. Apply the changes
+
+⚠️ Switching worlds may overwrite the current world  
+→ A backup will be created automatically
+
+---
+
+# Adding Mods
+
+- Select mods from the list or upload them
+- Apply the changes
+- Restart the server if required
+
+⚠️ Mods must match your loader (Forge or Fabric)
+
+---
+
+# Common Mistakes
+
+- Mixing Forge and Fabric mods
+- Changing mods on an existing world
+- Starting the server multiple times
+- Closing the page while the server is stopping
+
+---
+
+# Tips
+
+- If something doesn’t work, refresh the page
+- If the server won’t start, ask for help
+- Always wait for status changes before clicking again
+
+---
+
+# Summary
+
+Use the control panel to safely manage your Minecraft server.
+
+- Start → Play → Stop
+- Make changes carefully
+- Let the system handle backups automatically
