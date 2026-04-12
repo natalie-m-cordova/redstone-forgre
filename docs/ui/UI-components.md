@@ -6,15 +6,43 @@ This document defines reusable UI components.
 
 # UI Popovers
 
-## Server Popup
+Popovers provide lightweight, contextual inspection of entities (Servers, Worlds, Mods) without leaving the current view.
 
+They are designed for:
+- Fast hover-based inspection
+- Optional persistence (pinning)
+- Safe, intentional navigation
+- Limited contextual exploration (no deep nesting)
+
+## Core Interaction Model
+### Interaction Types
+
+| Interaction      | Behavior              |
+|:-----------------|:---------------------:|
+| Hover            | Opens Popup           |
+| Click (trigger)  | Pins Popup (persists) |
+| Click Outside    | Closes pinned popup   |
+| Arrow Button (↗) | Navigation            |
+
+## Popup Nesting
+### Constraint
+Popups are limited to **one level of nesting (depth = 1)***:
+- Primary popup -> may open a secondary popup
+- Secondary popup -> cannot open additional popups
+
+### Secondary Popup Rules
+- Hover-only (no pinning)
+- No recursive triggers
+- No navigation arrows
+- Must not contain further interactive popup elements
+
+## Server Popup
 ### Purpose
 Answers: **“What is this server configured to run?”**
 
 ### Trigger
-Hover on server tile/card.
-Hover on server list row
-- Optional click to “pin” the popup (not default).
+- Hover on **server name.**
+- Click to pin popup.
 
 ### Contents
 - Server name (e.g., Forge Survival)
@@ -23,87 +51,75 @@ Hover on server list row
 - World thumbnail image
 - Mods summary (count + (scrollable past 5) list preview)
 - Quick actions 
-  - “Open Server” / “Manage” (future)
+  - “Open Server” | “Manage”
+
+### Interactive Elements
+| Element     | Behavior             |
+|:------------|:--------------------:|
+| World name  | Hover -> World Popup |
+| Arrow (↗)	  | Navigate to world    |
+| Title arrow	| Navigate to server   |
 
 ### Wireframe (Server Popup)
-
+```
 ┌────────────────────────────────────┐  
-│ Server: Forge Survival             │  
+│ Server: Forge Survival          ↗  │  
 │ Loader: Forge 1.20.1               │  
-│ World: FoDWorld                    │  
+│ World: FoDWorld  ↗                 │  
 │                                    │  
 │ [ World Thumbnail ]                │  
 │                                    │
-│ Mods: 12 (hover for list)          |  
+│ Mods: 12 ↗                         |  
 │ [Open Server] | [Manage]           |  
 └────────────────────────────────────┘  
+```
 
 ## World Preview Popup
 ### Purpose
 Answers: **“Where is this world used?”**
 
 ### Trigger
-Hover (primary) on the **World name** line anywhere it appears:
-- Dashboard grid tiles
-- Last Played carousel cards
-- Worlds list rows
-
-Optional click to “pin” the popup (not default).
+- Hover on **World name**
+- Click to pin
 
 ### Contents
 - World name
-- World thumbnail image
-- Metadata (as available; can be placeholders in MVP)
+- World thumbnail
+- Metadata (as available)
   - Last played
   - Size
 - “Used by servers:” list
-  - Forge Survival
-  - Forge Creative
-  - etc.
+
+### Interactive Elements
+| Element     | Behavior               |
+|:------------|:----------------------:|
+| Server name  | Hover -> Server Popup |
+| Arrow (↗)	  | Navigate to Server     |
+| Title arrow	| Navigate to World      |
 
 ### Wireframe (World Popup)
-
+```
 ┌────────────────────────────────────┐    
-│ World: FoDWorld                    │    
+│ World: FoDWorld                  ↗ │    
 │                                    │  
 │ [ World Thumbnail ]                │  
 │                                    │  
-│ Last Played: YYYY-MM-DD (optional) │  
-│ Size: --- (optional)               │  
+│ Last Played: YYYY-MM-DD            │  
+│ Size: ---                          │  
 │                                    │  
 │ Used by Servers:                   │  
-│ - Forge Survival                   │  
-│ - Forge Creative                   │
+│ - Forge Survival ↗                 │  
+│ - Forge Creative ↗                 │
 └────────────────────────────────────┘  
-
-Used in:
-
-- Worlds list
-- Dashboard cards
-- Last Played carousel
-
-Behavior:
-
-- Appears on hover
-- Appears beside hovered element
-- Dynamically repositions to remain visible
-
-Hover is the primary interaction.
-
-Clicking the world name pins the popup.
+```
 
 ## Mod Popup
 ### Purpose
 Answers: **“What is this mod, and where is it used?”**
 
 ### Trigger
-Hover (primary) on a mod name anywhere it appears:
-- Mod Libraries (Forge/Fabric)
-- Server editor mod checklist
-- Any server summary view that lists mods
-- Any future “mods on server” display
-
-Optional click to “pin” the popup (not default).
+- Hover on **Mod name**
+- Click to pin
 
 ### Contents
 - Mod name
@@ -114,27 +130,28 @@ Optional click to “pin” the popup (not default).
 - Used by Servers list (servers using this mod)
 
 ### Wireframe (Mod Popup)
-
+```
 ┌──────────────────────────────────────────┐
-│ Mod: Just Enough Items (JEI)             │
+│ Mod: Just Enough Items (JEI)           ↗ │
 │ By: mezz                                 │
 │                                          │
 │ [ Mod Thumbnail ]                        │
 │                                          │
 │ Description: Adds item and recipe lookup │
 │                                          │
-│ URL: https://…                           │
+│ URL: https://…  ↗                        │
 │                                          │
 │ Used by Servers:                         │
-│ - Forge Survival                         │
-│ - Forge Creative                         │
+│ - Forge Survival ↗                       │
+│ - Forge Creative ↗                       │
 └──────────────────────────────────────────┘
+```
 
 ## Interaction Rules (Hover + Dynamic Placement)
 
 ### Default behavior
 - Hover opens popup.
-- Click pins popup (optional; not default).
+- Click pins popup.
 - Double-Click opens world/server to see the properties or manage it.
 - Popup appears offset so the hovered tile remains readable.
 
