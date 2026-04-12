@@ -159,6 +159,11 @@ function bindWorldHoverPopup() {
   }
 
   popup.addEventListener("click", (ev) => {
+    const navBtn = ev.target.closest(".popup-nav-btn");
+      if (navBtn) {
+        return;
+      }
+
     ev.stopPropagation();
   });
 
