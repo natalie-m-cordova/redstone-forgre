@@ -224,3 +224,4 @@ data/**
 !data/**/.gitkeep
 
 .zip
+.bkup

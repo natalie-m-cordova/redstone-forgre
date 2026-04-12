@@ -97,27 +97,394 @@ function placePopup(popup, x, y) {
   popup.style.top = `${py}px`;
 }
 
+let worldPopupBound = false;
+let worldPopupAnchor = null;
+let worldPopupPinned = false;
+
 function bindWorldHoverPopup() {
   const popup = document.getElementById("worldPopup");
-  if (!popup) return;
+  if (!popup || worldPopupBound) return;
+
+  worldPopupBound = true;
 
   const title = document.getElementById("worldPopupTitle");
   const usedBy = document.getElementById("worldPopupUsedBy");
+  const titleNav = document.getElementById("worldPopupTitleNav");
 
-  document.querySelectorAll(".worldName").forEach(el => {
-    el.addEventListener("mouseenter", (ev) => {
-      const world = ev.target.textContent.trim();
-      title.textContent = `World: ${world}`;
-      usedBy.textContent = "Forge Survival, Forge Creative (mock)";
-      popup.classList.remove("hidden");
-      placePopup(popup, ev.clientX, ev.clientY);
-    });
-    el.addEventListener("mousemove", (ev) => {
-      if (!popup.classList.contains("hidden")) placePopup(popup, ev.clientX, ev.clientY);
-    });
-    el.addEventListener("mouseleave", () => {
-      popup.classList.add("hidden");
-    });
+  function populate(world) {
+    if (titleNav) {
+      titleNav.dataset.worldName = world;
+    }
+    title.textContent = `World: ${world}`;
+
+    const users = getServersUsingWorld(dashboardServers, world);
+    if(!users.length) {
+      usedBy.innerHTML = `<span class="muted">Not currently used by any server.</span>`;
+      return;
+    }
+
+    usedBy.innerHTML = users.map(s => `
+      <div class="popup-link-row">
+        <span class="hoverable popup-server-link"
+          data-server-name="${escapeHtml(s.name)}">
+          ${escapeHtml(s.name)}
+        </span>
+        <button class="popup-nav-btn" data-nav-type="server" data-server-name="${escapeHtml(s.name)}"
+          title="Open server">
+          ↗
+        </button>
+      </div>
+    `).join("");
+  }
+
+  function showForElement(el, clientX = null, clientY = null) {
+    const world = el.textContent.trim();
+    populate(world);
+    worldPopupAnchor = el;
+    popup.classList.remove("hidden");
+
+    if (clientX !== null && clientY !== null) {
+      placePopup(popup, clientX, clientY);
+      return;
+    }
+
+    const rect = el.getBoundingClientRect();
+    placePopup(popup, rect.right, rect.top);
+  }
+
+  function hidePopup() {
+    popup.classList.add("hidden");
+    worldPopupAnchor = null;
+    worldPopupPinned = false;
+  }
+
+  popup.addEventListener("click", (ev) => {
+    ev.stopPropagation();
+  });
+
+  document.addEventListener("mouseover", (ev) => {
+    const el = ev.target.closest(".worldName");
+    if (!el) return;
+    if (worldPopupPinned) return;
+
+    showForElement(el, ev.clientX, ev.clientY);
+  });
+
+  document.addEventListener("mousemove", (ev) => {
+    const el = ev.target.closest(".worldName");
+    if (!el) return;
+    if (worldPopupPinned) return;
+    if (popup.classList.contains("hidden")) return;
+
+    placePopup(popup, ev.clientX, ev.clientY);
+  });
+
+  document.addEventListener("mouseout", (ev) => {
+    const el = ev.target.closest(".worldName");
+    if (!el) return;
+    if (worldPopupPinned) return;
+
+    const related = ev.relatedTarget;
+    if (related && el.contains(related)) return;
+
+    popup.classList.add("hidden");
+  });
+
+  document.addEventListener("click", (ev) => {
+    const el = ev.target.closest(".worldName");
+
+    if (el) {
+      ev.preventDefault();
+      ev.stopPropagation();
+
+      if (worldPopupPinned && worldPopupAnchor === el) {
+        hidePopup();
+        return;
+      }
+
+      worldPopupPinned = true;
+      showForElement(el);
+      return;
+    }
+
+    if (worldPopupPinned && !popup.contains(ev.target)) {
+      hidePopup();
+    }
+  });
+
+  window.addEventListener("scroll", () => {
+    if (!worldPopupAnchor || popup.classList.contains("hidden")) return;
+    const rect = worldPopupAnchor.getBoundingClientRect();
+    placePopup(popup, rect.right, rect.top);
+  }, true);
+
+  window.addEventListener("resize", () => {
+    if (!worldPopupAnchor || popup.classList.contains("hidden")) return;
+    const rect = worldPopupAnchor.getBoundingClientRect();
+    placePopup(popup, rect.right, rect.top);
+  });
+}
+
+let serverPopupBound = false;
+let serverPopupAnchor = null;
+let serverPopupPinned = false;
+
+function bindServerHoverPopup() {
+  const popup = document.getElementById("serverPopup");
+  if (!popup || serverPopupBound) return;
+
+  serverPopupBound = true;
+
+  const title = document.getElementById("serverPopupTitle");
+  const loader = document.getElementById("serverPopupLoader");
+  const world = document.getElementById("serverPopupWorld");
+  const mods = document.getElementById("serverPopupMods");
+  const titleNav = document.getElementById("serverPopupTitleNav");
+
+  function getServerContainer(el) {
+    return el.closest(".mini-card, .server-tile");
+  }
+
+  function populate(container) {
+    const serverName = container.dataset.serverName || "Unknown";
+    const loaderValue = container.dataset.loader || "Unknown";
+    const worldValue = container.dataset.world || "(no world)";
+    const modsValue = container.dataset.modCount || "0";
+
+    if (titleNav) {
+     titleNav.dataset.serverName = serverName;
+    }
+    title.textContent = `Server: ${serverName}`;
+    loader.textContent = loaderValue;
+    world.innerHTML = `
+      <span class="hoverable popup-world-link"
+        data-world-name="${escapeHtml(worldValue)}">
+        ${escapeHtml(worldValue)}
+      </span>
+      <button class="popup-nav-btn"
+        data-nav-type="world"
+        data-world-name="${escapeHtml(worldValue)}"
+        title="Open world">
+        ↗
+      </button>
+    `;
+    mods.textContent = modsValue;
+  }
+
+  function showForElement(anchorEl, clientX = null, clientY = null) {
+    const container = getServerContainer(anchorEl);
+    if (!container) return;
+
+    populate(container);
+    serverPopupAnchor = anchorEl;
+    popup.classList.remove("hidden");
+
+    if (clientX !== null && clientY !== null) {
+      placePopup(popup, clientX, clientY);
+      return;
+    }
+
+    const rect = anchorEl.getBoundingClientRect();
+    placePopup(popup, rect.right, rect.top);
+  }
+
+  function hidePopup() {
+    popup.classList.add("hidden");
+    serverPopupAnchor = null;
+    serverPopupPinned = false;
+  }
+
+  popup.addEventListener("mousedown", (ev) => {
+    ev.stopPropagation();
+  });
+
+  document.addEventListener("mouseover", (ev) => {
+    const el = ev.target.closest(".serverName");
+    if (!el) return;
+    if (serverPopupPinned) return;
+
+    showForElement(el, ev.clientX, ev.clientY);
+  });
+
+  document.addEventListener("mousemove", (ev) => {
+    const el = ev.target.closest(".serverName");
+    if (!el) return;
+    if (serverPopupPinned) return;
+    if (popup.classList.contains("hidden")) return;
+
+    placePopup(popup, ev.clientX, ev.clientY);
+  });
+
+  document.addEventListener("mouseout", (ev) => {
+    const el = ev.target.closest(".serverName");
+    if (!el) return;
+    if (serverPopupPinned) return;
+
+    const related = ev.relatedTarget;
+    if (related && el.contains(related)) return;
+
+    popup.classList.add("hidden");
+  });
+
+  document.addEventListener("mousedown", (ev) => {
+    const el = ev.target.closest(".serverName");
+
+    if (el) {
+      ev.preventDefault();
+      ev.stopPropagation();
+
+      if (serverPopupPinned && serverPopupAnchor === el) {
+        hidePopup();
+        return;
+      }
+
+      serverPopupPinned = true;
+      showForElement(el);
+      return;
+    }
+
+    if (serverPopupPinned && !popup.contains(ev.target)) {
+      hidePopup();
+    }
+  });
+
+  window.addEventListener("scroll", () => {
+    if (!serverPopupAnchor || popup.classList.contains("hidden")) return;
+    const rect = serverPopupAnchor.getBoundingClientRect();
+    placePopup(popup, rect.right, rect.top);
+  }, true);
+
+  window.addEventListener("resize", () => {
+    if (!serverPopupAnchor || popup.classList.contains("hidden")) return;
+    const rect = serverPopupAnchor.getBoundingClientRect();
+    placePopup(popup, rect.right, rect.top);
+  });
+}
+
+function bindPopupServerLinksInWorldPopup() {
+  const popup = document.getElementById("popupChildServer");
+  const parentPopup = document.getElementById("worldPopup");
+  if (!popup || !parentPopup) return;
+
+  const title = document.getElementById("popupChildServerTitle");
+  const loader = document.getElementById("popupChildServerLoader");
+  const world = document.getElementById("popupChildServerWorld");
+  const mods = document.getElementById("popupChildServerMods");
+
+  function hide() {
+    popup.classList.add("hidden");
+  }
+
+  document.addEventListener("mouseover", (ev) => {
+    const el = ev.target.closest(".popup-server-link");
+    if (!el) return;
+    if (parentPopup.classList.contains("hidden")) return;
+
+    const server = getServerByName(dashboardServers, el.dataset.serverName || "");
+    if (!server) return;
+
+    title.textContent = `Server: ${server.name}`;
+    loader.textContent = server.loader || "Unknown";
+    world.textContent = server.worldName || "(no world)";
+    mods.textContent = Array.isArray(server.modIds) ? String(server.modIds.length) : "0";
+
+    popup.classList.remove("hidden");
+    const rect = el.getBoundingClientRect();
+    placePopup(popup, rect.right, rect.top);
+  });
+
+  document.addEventListener("mousemove", (ev) => {
+    const el = ev.target.closest(".popup-server-link");
+    if (!el) return;
+    if (popup.classList.contains("hidden")) return;
+
+    placePopup(popup, ev.clientX, ev.clientY);
+  });
+
+  document.addEventListener("mouseout", (ev) => {
+    const el = ev.target.closest(".popup-server-link");
+    if (!el) return;
+
+    const related = ev.relatedTarget;
+    if (related && (el.contains(related) || popup.contains(related))) return;
+
+    hide();
+  });
+
+  parentPopup.addEventListener("mouseleave", hide);
+}
+
+function bindPopupWorldLinkInServerPopup() {
+  const popup = document.getElementById("popupChildWorld");
+  const parentPopup = document.getElementById("serverPopup");
+  if (!popup || !parentPopup) return;
+
+  const title = document.getElementById("popupChildWorldTitle");
+  const usedBy = document.getElementById("popupChildWorldUsedBy");
+
+  function hide() {
+    popup.classList.add("hidden");
+  }
+
+  document.addEventListener("mouseover", (ev) => {
+    const el = ev.target.closest(".popup-world-link");
+    if (!el) return;
+    if (parentPopup.classList.contains("hidden")) return;
+
+    const worldName = (el.dataset.worldName || "").trim();
+    const users = getServersUsingWorld(dashboardServers, worldName);
+
+    title.textContent = `World: ${worldName}`;
+    usedBy.innerHTML = users.length
+      ? users.map(s => `<div>${escapeHtml(s.name)}</div>`).join("")
+      : `<div class="muted">Not currently used by any server.</div>`;
+
+    popup.classList.remove("hidden");
+    const rect = el.getBoundingClientRect();
+    placePopup(popup, rect.right, rect.top);
+  });
+
+  document.addEventListener("mousemove", (ev) => {
+    const el = ev.target.closest(".popup-world-link");
+    if (!el) return;
+    if (popup.classList.contains("hidden")) return;
+
+    placePopup(popup, ev.clientX, ev.clientY);
+  });
+
+  document.addEventListener("mouseout", (ev) => {
+    const el = ev.target.closest(".popup-world-link");
+    if (!el) return;
+
+    const related = ev.relatedTarget;
+    if (related && (el.contains(related) || popup.contains(related))) return;
+
+    hide();
+  });
+
+  parentPopup.addEventListener("mouseleave", hide);
+}
+
+function bindPopupNavigation() {
+  document.addEventListener("click", (ev) => {
+    const btn = ev.target.closest(".popup-nav-btn");
+    if (!btn) return;
+
+    ev.stopPropagation();
+
+    const type = btn.dataset.navType;
+
+    if (type === "server") {
+      const name = btn.dataset.serverName;
+      console.log("Navigate to server:", name);
+      toast(`Navigate to server: ${name} (future)`);
+    }
+
+    if (type === "world") {
+      const name = btn.dataset.worldName;
+      console.log("Navigate to world:", name);
+      toast(`Navigate to world: ${name} (future)`);
+    }
   });
 }
 
@@ -151,6 +518,16 @@ function sortLastPlayed(servers) {
   });
 }
 
+function getServersUsingWorld(servers, worldName) {
+  return servers.filter(s => (s.worldName || "").trim() === worldName.trim());
+}
+
+function getServerByName(servers, serverName) {
+  return servers.find(s => (s.name || "").trim() === serverName.trim()) || null;
+}
+
+let dashboardServers = [];
+
 function renderLastPlayed(servers) {
   const track = document.getElementById("carTrack");
   if (!track) return;
@@ -166,9 +543,15 @@ function renderLastPlayed(servers) {
     const id = escapeHtml(s.id);
     const name = escapeHtml(s.name);
     const world = escapeHtml(s.worldName || "(no world)");
+    const loader = escapeHtml(s.loader || "Unknown");
+    const modsCount = Array.isArray(s.modIds) ? s.modIds.length : 0;
+
     return `
-      <div class="mini-card" data-server-id="${id}" data-world="${world}">
-        <div class="mini-title">${name}</div>
+      <div class="mini-card hover-server" data-server-id="${id}" 
+        data-server-name="${name}" data-world="${world}" 
+        data-loader="${loader}" data-mod-count="${modsCount}"
+      >
+        <div class="mini-title"><span class="hoverable serverName">${name}</span></div>
         <div class="mini-sub">World: <span class="hoverable worldName">${world}</span></div>
         <div class="mini-actions">
           <button class="btn small" data-action="start" data-server-id="${id}">Start</button>
@@ -180,6 +563,7 @@ function renderLastPlayed(servers) {
 
   bindButtons();
   bindWorldHoverPopup();
+  bindServerHoverPopup();
 }
 
 function renderGrid(servers) {
@@ -215,8 +599,10 @@ function renderGrid(servers) {
       const s = byKey.get(`${r.loader}:${m.mode}`);
       if (!s) {
         html += `
-          <div class="server-tile">
-            <div class="tile-title">${r.label} ${m.label}</div>
+          <div class="server-tile hover-server" data-server-name="${r.label} ${m.label}"
+            data-loader="${r.label}" data-world="${r.defaultWorld}"
+            data-mod-count="0" >
+            <div class="tile-title"><span class="hoverable serverName">${r.label} ${m.label}</span></div>
             <div class="tile-world">World: <span class="hoverable worldName">${r.defaultWorld}</span></div>
             <img class="tile-thumb" src="/assets/mock-worlds/survival_world.png" alt="World thumbnail" />
             <div class="tile-actions">
@@ -232,10 +618,13 @@ function renderGrid(servers) {
         const modsCount = Array.isArray(s.modIds) ? s.modIds.length : 0;
 
         html += `
-          <div class="server-tile" data-server-id="${id}">
-            <div class="tile-title">${name}</div>
+          <div class="server-tile" data-server-id="${id}"
+            data-server-name="${name}" data-world="${world}"
+            data-loader="${escapeHtml(s.loader || r.label)}"
+            data-mod-count="${modsCount}">
+            <div class="tile-title"><span class="hoverable serverName">${name}</span></div>
             <div class="tile-world">World: <span class="hoverable worldName">${world}</span></div>
-            <div class="muted" style="margin-top:6px;">Mods: ${modsCount}</div>
+            <div class="muted title-mods">Mods: ${modsCount}</div>
             <img class="tile-thumb" src="/assets/mock-worlds/survival_world.png" alt="World thumbnail" />
             <div class="tile-actions">
               <button class="btn" data-action="start" data-server-id="${id}">Start</button>
@@ -250,10 +639,12 @@ function renderGrid(servers) {
   mount.innerHTML = html;
   bindButtons();
   bindWorldHoverPopup();
+  bindServerHoverPopup();
 }
 
 async function loadDashboardData() {
   const servers = await loadServers();
+  dashboardServers = servers;
   renderLastPlayed(servers);
   renderGrid(servers);
 }
@@ -263,6 +654,10 @@ window.addEventListener("DOMContentLoaded", async () => {
   bindSidebar();
   bindCarousel();
   bindWorldHoverPopup();
+  bindServerHoverPopup();
+  bindPopupServerLinksInWorldPopup();
+  bindPopupWorldLinkInServerPopup();
+  bindPopupNavigation(); 
   await refreshStatus();
   await loadDashboardData();
 });
