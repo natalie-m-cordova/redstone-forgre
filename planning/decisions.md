@@ -167,9 +167,34 @@ Architecture documents may continue to use “Profiles” as the canonical model
 Future cleanup step:
 - Add a short mapping note in `docs/03-profiles-worlds.md` (Servers UI == Profiles model).
 
-## 2026-04-011 - Linux NAS as Primary Deployment Target
+## 2026-04-11 - Linux NAS as Primary Deployment Target
 **Decision:** Redstone Forge will use Linux NAS as the primary real-host deployment target beginning with Stage 1.  Windows host execution is no longer the primary deployment path.  
 **Scope:** Stage1+  
 **Reason:** Improves operational isolation, reduces migration churn, aligns real deployment with long-term architecture, and avoids hosting backend/server workloads on a personal workstation
-**Supersedes:** Windows-first execution path in roadmatp/architecture staging
+**Supersedes:** Windows-first execution path in roadmap/architecture staging
 **Impact:**  Stage 1 becomes Linux host integration; Windows becomes optional dev-only local testing, not primary deployment.
+
+## 2026-04-12 - Popup Interaction Model
+**Decision:** Formalize and constrain popup interaction behavior accross the dashboard:
+* Primary Popups
+   - Hover -> show
+   - Click -> pin
+   - Outside click -> close
+* Nested popups:
+   - Allowed at **one level only**
+   - Hover-only (no pinning)
+   - No recursive popup chains
+* Navigation:
+   - Performed via explicit arrow controls
+   - Not via clickable text or full-row click
+**Scope:** Stage 0 UI -> Future UI components  
+**Reason:** Initial popup behavior existed but was undefined and inconsistent.  This refinement standardizes interaction patterns and introduces contraints to prevent UI complexity and accidental interactions.
+**Supersedes:** Ad-hoc popup behavior implemented during early Stage 0 UI development (implicit, undocumented behavior)
+**Impact:**  
+- Establishes a consistent popup interaction model for all future UI components
+- Prevents recursive popup chains
+- Separates interaction types
+   - Hover -> inspect
+   - Click -> persistent
+   - Arrow -> navigate
+**Impact:** Active

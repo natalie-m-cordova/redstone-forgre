@@ -15,6 +15,7 @@ def _ctx(request: Request, page: str, title: str):
         "page": page,
         "title": title,
         "app_name": "Redstone Forge",
+        "csp_nonce": request.state.csp_nonce,
     }
 
 @router.get("/", response_class=HTMLResponse)

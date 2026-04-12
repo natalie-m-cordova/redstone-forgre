@@ -8,6 +8,9 @@ from backend.api.routers import system, servers, worlds
 from backend.ui.router import router as ui_router
 from backend.api.routers import ui_data
 
+from secrets import token_urlsafe
+from starlette.middleware.base import BaseHTTPMiddleware
+
 # backend/main.py -> backend/ -> repo root
 REPO_ROOT = Path(__file__).resolve().parents[1]
 FAVICON_PATH = REPO_ROOT / "assets" / "branding" / "redstone-forge.ico"
@@ -34,3 +37,19 @@ app.include_router(system.router)
 app.include_router(servers.router, prefix="/servers", tags=["servers"])
 app.include_router(worlds.router, prefix="/worlds", tags=["worlds"])
 app.include_router(ui_data.router, prefix="/api", tags=["ui"])
+
+class CSPNonceMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        request.state.csp_nonce = token_urlsafe(16)
+        response = await call_next(request)
+        response.headers["Content-Security-Policy"] = (
+            f"default-src 'self'; "
+            f"script-src 'self' 'nonce-{request.state.csp_nonce}'; "
+            f"style-src 'self' 'unsafe-inline'; "
+            f"img-src 'self' data:; "
+            f"font-src 'self'; "
+            f"connect-src 'self';"
+        )
+        return response
+    
+app.add_middleware(CSPNonceMiddleware)

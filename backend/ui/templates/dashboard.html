@@ -29,12 +29,58 @@
     </div>
   </section>
 
-  <!-- World hover popup placeholder -->
   <div id="worldPopup" class="popup hidden">
-    <div class="popup-title" id="worldPopupTitle">World</div>
+    <div class="popup-head">
+      <div class="popup-title" id="worldPopupTitle">World</div>
+      <button class="popup-nav-btn"
+        id="worldPopupTitleNav"
+        data-nav-type="world"
+        data-world-name=""
+        title="Open world">
+        ↗
+      </button>
+    </div>
     <img class="popup-thumb" src="/assets/mock-worlds/survival_world.png" alt="World thumbnail" />
     <div class="popup-meta">
-      <div><span class="muted">Used by:</span> <span id="worldPopupUsedBy">…</span></div>
+      <div><span class="muted">Used by:</span></div>
+      <div id="worldPopupUsedBy">…</div>
+    </div>
+  </div>
+
+  <div id="serverPopup" class="popup hidden">
+    <div class="popup-head">
+      <div class="popup-title" id="serverPopupTitle">Server</div>
+      <button class="popup-nav-btn"
+        id="serverPopupTitleNav"
+        data-nav-type="server"
+        data-server-id=""
+        title="Open server">
+        ↗
+      </button>
+    </div>
+    <div class="popup-meta">
+      <div><span class="muted">Loader:</span> <span id="serverPopupLoader">…</span></div>
+      <div><span class="muted">World:</span></div>
+      <div id="serverPopupWorld">…</div>
+      <div><span class="muted">Mods:</span> <span id="serverPopupMods">…</span></div>
+    </div>
+    <img class="popup-thumb" src="/assets/mock-worlds/survival_world.png" alt="World thumbnail" />
+  </div>
+
+  <div id="popupChildServer" class="popup hidden">
+    <div class="popup-title" id="popupChildServerTitle">Server</div>
+    <div class="popup-meta">
+      <div><span class="muted">Loader:</span> <span id="popupChildServerLoader">…</span></div>
+      <div><span class="muted">World:</span> <span id="popupChildServerWorld">…</span></div>
+      <div><span class="muted">Mods:</span> <span id="popupChildServerMods">…</span></div>
+    </div>
+  </div>
+
+  <div id="popupChildWorld" class="popup hidden">
+    <div class="popup-title" id="popupChildWorldTitle">World</div>
+    <div class="popup-meta">
+      <div><span class="muted">Used by Servers:</span></div>
+      <div id="popupChildWorldUsedBy">…</div>
     </div>
   </div>
 {% endblock %}
